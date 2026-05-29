@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diário de Surfcasting</title>
+    <!-- Tailwind CSS para um design moderno e responsivo -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons para os ícones -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen font-sans">
+
+    <!-- Header -->
+    <header class="bg-slate-800 border-b border-slate-700 sticky top-0 z-50 shadow-md">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <i data-lucide="anchor" class="text-blue-400 w-8 h-8"></i>
+                <h1 class="text-2xl font-bold tracking-wide bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">Surfcasting Log</h1>
+            </div>
+            <div class="flex gap-2">
+                <button onclick="exportarDados()" class="flex items-center gap-2 bg-slate-700 hover:bg-slate-600 px-4 py-2 rounded-lg text-sm font-medium transition">
+                    <i data-lucide="download" class="w-4 h-4"></i> Exportar JSON
+                </button>
+                <button onclick="exportarCSV()" class="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 px-4 py-2 rounded-lg text-sm font-medium transition">
+                    <i data-lucide="file-text" class="w-4 h-4"></i> Exportar CSV
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <!-- COLUNA 1 & 2: Formulário e Histórico -->
+        <div class="lg:col-span-2 space-y-8">
+            
+            <!-- Formulário de Registo -->
+            <section class="bg-slate-800 border border-slate-700 rounded-xl p-6 shadow-xl">
+                <div class="flex items-center gap-2 mb-6 border-b border-slate-700 pb-3">
+                    <i data-lucide="plus-circle" class="text-blue-400"></i>
+                    <h2 class="text-xl font-semibold">Registar Nova Saída</h2>
+                </div>
+                
+                <form id="form-pesca" onsubmit="guardarPesca(event)" class="space-y-6">
+                    <!-- Linha 1: Data e Lua -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-400 mb-1">Data</label>
+                            <input type="date" id="data" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 focus:outline-none focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-400 mb-1">Fase da Lua</label>
+                            <select id="lua" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 focus:outline-none focus:border-blue-500">
+                                <option value="Nova">🌑 Lua Nova</option>
+                                <option value="Crescente">🌓 Quarto Crescente</option>
+                                <option value="Cheia">🌕 Lua Cheia</option>
+                                <option value="Minguante">🌗 Quarto Minguante</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Linha 2: Maré -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-400 mb-1">Tipo de Maré</label>
+                            <select id="mare-tipo" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 focus:outline-none focus:border-blue-500">
+                                <option value="Enchente">🌊 Enchente</option>
+                                <option value="Vaza">📉 Vaza</option>
+                                <option value="Preamar">🔝 Preamar (Cheia)</option>
+                                <option value="Baixa-mar">🛑 Baixa-mar (Vazia)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-400 mb-1">Altura da Maré (m)</label>
+                            <input type="number" id="mare-altura" step="0.1" placeholder="Ex: 2.8" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 focus:outline-none focus:border-blue-500">
+                        </div>
+                    </div>
+
+                    <!-- Linha 3: Mar e Vento -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-400 mb-1">Tamanho das Ondas (m)</label>
+                            <input type="number" id="ondas" step="0.1" placeholder="Ex: 1.2" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 focus:outline-none focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-400 mb-1">Vento (Direção/Força)</label>
+                            <input type="text" id="vento" placeholder="Ex: Norte 15 km/h, Noroeste Fraco" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 focus:outline-none focus:border-blue-500">
+                        </div>
+                    </div>
+
+                    <!-- Linha 4: Iscos -->
+                    <div>
+                        <label class="block text-sm font-medium text-slate-400 mb-1">Iscos Utilizados (separados por vírgula)</label>
+                        <input type="text" id="iscos" placeholder="Ex: Casulo, Ganso, Caranguejo, Longueirão" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 focus:outline-none focus:border-blue-500">
+                    </div>
+
+                    <!-- Linha 5: Capturas -->
+                    <div>
+                        <label class="block text-sm font-medium text-slate-400 mb-1">Peixes Pescados (Espécie e quantidade ou tamanho)</label>
+                        <textarea id="peixes" rows="2" placeholder="Ex: 2 Robalos (35cm, 42cm), 1 Sargo (800g) ou 'Grade'" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 focus:outline-none focus:border-blue-500"></textarea>
+                    </div>
+
+                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 rounded-lg transition shadow-lg flex items-center justify-center gap-2">
+                        <i data-lucide="save" class="w-5 h-5"></i> Gravar Sessão de Pesca
+                    </button>
+                </form>
+            </section>
+
+            <!-- Histórico / Log das Pescas -->
+            <section class="bg-slate-800 border border-slate-700 rounded-xl p-6 shadow-xl">
+                <div class="flex items-center gap-2 mb-6 border-b border-slate-700 pb-3">
+                    <i data-lucide="history" class="text-blue-400"></i>
+                    <h2 class="text-xl font-semibold">Histórico de Saídas</h2>
+                </div>
+                <div id="historico-lista" class="space-y-4 max-h-[600px] overflow-y-auto pr-2">
+                    <!-- Injetado via JS -->
+                </div>
+            </section>
+        </div>
+
+        <!-- COLUNA 3: Dashboard de Análise -->
+        <div class="space-y-8">
+            <section class="bg-slate-800 border border-slate-700 rounded-xl p-6 shadow-xl sticky top-24">
+                <div class="flex items-center gap-2 mb-6 border-b border-slate-700 pb-3">
+                    <i data-lucide="bar-chart-3" class="text-blue-400"></i>
+                    <h2 class="text-xl font-semibold">Análise de Rendimento</h2>
+                </div>
+
+                <div class="space-y-6">
+                    <!-- Estatística Básica -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-slate-900 p-4 rounded-lg border border-slate-700 text-center">
+                            <span class="text-xs text-slate-400 block mb-1 uppercase tracking-wider">Total Saídas</span>
+                            <span id="stat-total" class="text-3xl font-bold text-blue-400">0</span>
+                        </div>
+                        <div class="bg-slate-900 p-4 rounded-lg border border-slate-700 text-center">
+                            <span class="text-xs text-slate-400 block mb-1 uppercase tracking-wider">Taxa de Sucesso</span>
+                            <span id="stat-sucesso" class="text-3xl font-bold text-emerald-400">0%</span>
+                        </div>
+                    </div>
+
+                    <!-- Top Melhores Condições -->
+                    <div class="space-y-4">
+                        <h3 class="text-sm font-semibold text-slate-300 uppercase tracking-wider">Padrões de Sucesso</h3>
+                        
+                        <div class="bg-slate-900 p-4 rounded-lg border border-slate-700 space-y-3 text-sm">
+                            <div class="flex justify-between items-center">
+                                <span class="text-slate-400 flex items-center gap-1"><i data-lucide="moon" class="w-4 h-4"></i> Melhor Lua:</span>
+                                <span id="best-lua" class="font-medium text-slate-200">-</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-slate-400 flex items-center gap-1"><i data-lucide="waves" class="w-4 h-4"></i> Melhor Maré:</span>
+                                <span id="best-mare" class="font-medium text-slate-200">-</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-slate-400 flex items-center gap-1"><i data-lucide="fish" class="w-4 h-4"></i> Isco Mas Eficaz:</span>
+                                <span id="best-isco" class="font-medium text-slate-200">-</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-xs text-slate-500 italic text-center pt-2">
+                        Os padrões são calculados com base nas saídas onde existiram capturas efetivas (excluindo grades).
+                    </div>
+                </div>
+            </section>
+        </div>
+
+    </main>
+
+    <!-- Script de Lógica do Sistema -->
+    <script>
+        // Inicializar ícones do Lucide
+        lucide.createIcons();
+
+        // Carregar dados iniciais do LocalStorage ou começar vazio
+        let pescas = JSON.parse(localStorage.getItem('surfcasting_logs')) || [];
+
+        // Ao carregar a página, define a data de hoje como padrão e atualiza a interface
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('data').valueToDate = new Date();
+            document.getElementById('data').value = new Date().toISOString().substring(0, 10);
+            atualizarInterface();
+        });
+
+        // Gravar nova pesca
+        function guardarPesca(e) {
+            e.preventDefault();
+
+            const novaPesca = {
+                id: Date.now(),
+                data: document.getElementById('data').value,
+                lua: document.getElementById('lua').value,
+                mareTipo: document.getElementById('mare-tipo').value,
+                mareAltura: document.getElementById('mare-altura').value || 'N/A',
+                ondas: document.getElementById('ondas').value || 'N/A',
+                vento: document.getElementById('vento').value || 'N/A',
+                iscos: document.getElementById('iscos').value,
+                peixes: document.getElementById('peixes').value
+            };
+
+            pescas.unshift(novaPesca); // Adiciona no início da lista
+            localStorage.setItem('surfcasting_logs', JSON.stringify(pescas));
+            
+            document.getElementById('form-pesca').reset();
+            document.getElementById('data').value = new Date().toISOString().substring(0, 10);
+            
+            atualizarInterface();
+        }
+
+        // Apagar um registo
+        function eliminarPesca(id) {
+            if(confirm("Tens a certeza que queres eliminar este registo de pesca?")) {
+                pescas = pescas.filter(p => p.id !== id);
+                localStorage.setItem('surfcasting_logs', JSON.stringify(pescas));
+                atualizarInterface();
+            }
+        }
+
+        // Atualizar listagem e analíticas
+        function atualizarInterface() {
+            renderHistorico();
+            calcularMetricas();
+            lucide.createIcons(); // Recarrega os ícones gerados dinamicamente
+        }
+
+        // Renderizar o histórico no HTML
+        function renderHistorico() {
+            const container = document.getElementById('historico-lista');
+            if (pescas.length === 0) {
+                container.innerHTML = `<p class="text-slate-500 text-center py-8 text-sm">Ainda não tens nenhuma saída registada.</p>`;
+                return;
+            }
+
+            container.innerHTML = pescas.map(p => {
+                const isGrade = p.peixes.toLowerCase().includes('grade') || p.peixes.trim() === '0' || p.peixes.toLowerCase() === 'nenhum';
+                return `
+                    <div class="bg-slate-900 border ${isGrade ? 'border-amber-900/40 bg-amber-950/10' : 'border-slate-700'} p-4 rounded-lg relative group transition hover:border-slate-600">
+                        <button onclick="eliminarPesca(${p.id})" class="absolute top-4 right-4 text-slate-500 hover:text-red-400 transition" title="Eliminar registo">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        </button>
+                        
+                        <div class="flex flex-wrap items-center gap-x-4 gap-y-1 mb-2 text-xs font-semibold text-slate-400">
+                            <span class="text-blue-400 flex items-center gap-1 text-sm font-bold">
+                                <i data-lucide="calendar" class="w-3.5 h-3.5"></i> ${formatarData(p.data)}
+                            </span>
+                            <span class="bg-slate-800 px-2 py-0.5 rounded border border-slate-700">${p.lua}</span>
+                            <span class="bg-slate-800 px-2 py-0.5 rounded border border-slate-700">${p.mareTipo} (${p.mareAltura}m)</span>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-2 text-xs my-3 text-slate-300 border-t border-b border-slate-800/60 py-2">
+                            <div><span class="text-slate-500">Mar:</span> ${p.ondas}m</div>
+                            <div><span class="text-slate-500">Vento:</span> ${p.vento}</div>
+                            <div class="col-span-2"><span class="text-slate-500">Iscos:</span> <span class="text-cyan-300">${p.iscos}</span></div>
+                        </div>
+
+                        <div class="mt-2 text-sm">
+                            <span class="text-xs text-slate-500 block">Capturas:</span>
+                            <p class="${isGrade ? 'text-amber-400/80 italic' : 'text-emerald-400 font-medium'}">${p.peixes}</p>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Auxiliar para formatar data DD/MM/AAAA
+        function formatarData(dataStr) {
+            const partes = dataStr.split('-');
+            if(partes.length !== 3) return dataStr;
+            return `${partes[2]}/${partes[1]}/${partes[0]}`;
+        }
+
+        // Lógica de Analytics (Cálculo de padrões)
+        function calcularMetricas() {
+            const total = pescas.length;
+            document.getElementById('stat-total').innerText = total;
+
+            if (total === 0) {
+                document.getElementById('stat-sucesso').innerText = '0%';
+                document.getElementById('best-lua').innerText = '-';
+                document.getElementById('best-mare').innerText = '-';
+                document.getElementById('best-isco').innerText = '-';
+                return;
+            }
+
+            // Filtrar apenas saídas com capturas (sem a palavra "grade")
+            const saídasComSucesso = pescas.filter(p => {
+                const txt = p.peixes.toLowerCase();
+                return !(txt.includes('grade') || txt === '0' || txt === 'nenhum');
+            });
+
+            const taxaSucesso = Math.round((saídasComSucesso.length / total) * 100);
+            document.getElementById('stat-sucesso').innerText = `${taxaSucesso}%`;
+
+            if (saídasComSucesso.length === 0) {
+                document.getElementById('best-lua').innerText = 'Sem capturas';
+                document.getElementById('best-mare').innerText = 'Sem capturas';
+                document.getElementById('best-isco').innerText = 'Sem capturas';
+                return;
+            }
+
+            // Contadores de frequência para os padrões
+            let luas = {}, mares = {}, iscosContador = {};
+
+            saídasComSucesso.forEach(p => {
+                // Lua
+                luas[p.lua] = (luas[p.lua] || 0) + 1;
+                // Maré
+                mares[p.mareTipo] = (mares[p.mareTipo] || 0) + 1;
+                // Iscos (divide por vírgula para contar individualmente)
+                p.iscos.split(',').forEach(isco => {
+                    const limpo = isco.trim().toLowerCase();
+                    if(limpo) iscosContador[limpo] = (iscosContador[limpo] || 0) + 1;
+                });
+            });
+
+            document.getElementById('best-lua').innerText = obterMaiorObjeto(luas);
+            document.getElementById('best-mare').innerText = obterMaiorObjeto(mares);
+            
+            const melhorIsco = obterMaiorObjeto(iscosContador);
+            document.getElementById('best-isco').innerText = melhorIsco ? melhorIsco.charAt(0).toUpperCase() + melhorIsco.slice(1) : '-';
+        }
+
+        function obterMaiorObjeto(obj) {
+            return Object.keys(obj).reduce((a, b) => obj[a] > obj[b] ? a : b, '-');
+        }
+
+        // Exportação de Dados em formato JSON (Backup completo legível por máquinas)
+        function exportarDados() {
+            if (pescas.length === 0) return alert("Não existem dados para exportar.");
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(pescas, null, 2));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", `surfcasting_logs_${new Date().toISOString().substring(0,10)}.json`);
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+        }
+
+        // Exportação em CSV (Excelente para abrir diretamente no Excel/Sheets)
+        function exportarCSV() {
+            if (pescas.length === 0) return alert("Não existem dados para exportar.");
+            
+            // Cabeçalhos do ficheiro Excel
+            let csvContent = "data:text/csv;charset=utf-8,\uFEFF"; // BOM para suportar acentos em PT no Excel
+            csvContent += "Data;Fase da Lua;Tipo de Mare;Altura Mare (m);Ondas (m);Vento;Iscos;Peixes Pescados\n";
+
+            pescas.forEach(p => {
+                // Escapar aspas e limpar quebras de linha para não quebrar a estrutura CSV
+                let linha = [
+                    formatarData(p.data),
+                    p.lua,
+                    p.mareTipo,
+                    p.mareAltura.replace('.', ','), // padrão português de decimais
+                    p.ondas.replace('.', ','),
+                    `"${p.vento.replace(/"/g, '""')}"`,
+                    `"${p.iscos.replace(/"/g, '""')}"`,
+                    `"${p.peixes.replace(/"/g, '""').replace(/\n/g, ' ')}"`
+                ].join(";");
+                csvContent += linha + "\n";
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", encodedUri);
+            downloadAnchor.setAttribute("download", `relatorio_pesca_surfcasting.csv`);
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+        }
+    </script>
+</body>
+</html>

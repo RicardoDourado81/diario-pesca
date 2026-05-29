@@ -13,12 +13,16 @@
 
     <!-- Header -->
     <header class="bg-slate-800 border-b border-slate-700 sticky top-0 z-50 shadow-md">
-        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
             <div class="flex items-center gap-3">
                 <i data-lucide="anchor" class="text-blue-400 w-8 h-8"></i>
                 <h1 class="text-2xl font-bold tracking-wide bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">Surfcasting Log</h1>
             </div>
-            <div class="flex gap-2">
+            <div class="flex flex-wrap items-center gap-2">
+                <!-- Indicador/Botão de Modo Admin -->
+                <button id="btn-admin-toggle" onclick="toggleAdminMode()" class="flex items-center gap-2 bg-slate-700 hover:bg-slate-600 px-4 py-2 rounded-lg text-sm font-medium transition text-amber-400">
+                    <i data-lucide="lock" id="icon-lock" class="w-4 h-4"></i> <span id="txt-lock">Modo Consulta</span>
+                </button>
                 <button onclick="exportarDados()" class="flex items-center gap-2 bg-slate-700 hover:bg-slate-600 px-4 py-2 rounded-lg text-sm font-medium transition">
                     <i data-lucide="download" class="w-4 h-4"></i> Exportar JSON
                 </button>
@@ -34,19 +38,23 @@
         <!-- COLUNA 1 & 2: Formulário e Histórico -->
         <div class="lg:col-span-2 space-y-8">
             
-            <!-- Formulário de Registo -->
-            <section class="bg-slate-800 border border-slate-700 rounded-xl p-6 shadow-xl">
+            <!-- Formulário de Registo (Oculto por defeito se não for Admin) -->
+            <section id="seccao-formulario" class="bg-slate-800 border border-slate-700 rounded-xl p-6 shadow-xl hidden">
                 <div class="flex items-center gap-2 mb-6 border-b border-slate-700 pb-3">
                     <i data-lucide="plus-circle" class="text-blue-400"></i>
                     <h2 class="text-xl font-semibold">Registar Nova Saída</h2>
                 </div>
                 
                 <form id="form-pesca" onsubmit="guardarPesca(event)" class="space-y-6">
-                    <!-- Linha 1: Data e Lua -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Linha 1: Data, Local e Lua -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
                             <label class="block text-sm font-medium text-slate-400 mb-1">Data</label>
                             <input type="date" id="data" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 focus:outline-none focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-400 mb-1">Local de Pesca</label>
+                            <input type="text" id="local" placeholder="Ex: Praia do Meco" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 focus:outline-none focus:border-blue-500">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-slate-400 mb-1">Fase da Lua</label>
@@ -145,6 +153,10 @@
                         
                         <div class="bg-slate-900 p-4 rounded-lg border border-slate-700 space-y-3 text-sm">
                             <div class="flex justify-between items-center">
+                                <span class="text-slate-400 flex items-center gap-1"><i data-lucide="map-pin" class="w-4 h-4"></i> Melhor Local:</span>
+                                <span id="best-local" class="font-medium text-slate-200">-</span>
+                            </div>
+                            <div class="flex justify-between items-center">
                                 <span class="text-slate-400 flex items-center gap-1"><i data-lucide="moon" class="w-4 h-4"></i> Melhor Lua:</span>
                                 <span id="best-lua" class="font-medium text-slate-200">-</span>
                             </div>
@@ -153,7 +165,7 @@
                                 <span id="best-mare" class="font-medium text-slate-200">-</span>
                             </div>
                             <div class="flex justify-between items-center">
-                                <span class="text-slate-400 flex items-center gap-1"><i data-lucide="fish" class="w-4 h-4"></i> Isco Mas Eficaz:</span>
+                                <span class="text-slate-400 flex items-center gap-1"><i data-lucide="fish" class="w-4 h-4"></i> Isco Mais Eficaz:</span>
                                 <span id="best-isco" class="font-medium text-slate-200">-</span>
                             </div>
                         </div>
@@ -170,26 +182,44 @@
 
     <!-- Script de Lógica do Sistema -->
     <script>
-        // Inicializar ícones do Lucide
-        lucide.createIcons();
+        // CONFIGURAÇÃO: Altera aqui a tua palavra-passe secreta para poderes registar saídas
+        const SENHA_ADMIN = "pesca123"; 
 
-        // Carregar dados iniciais do LocalStorage ou começar vazio
+        let isAdmin = false;
         let pescas = JSON.parse(localStorage.getItem('surfcasting_logs')) || [];
 
-        // Ao carregar a página, define a data de hoje como padrão e atualiza a interface
+        // Inicializar os ícones e a interface
         document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('data').valueToDate = new Date();
             document.getElementById('data').value = new Date().toISOString().substring(0, 10);
             atualizarInterface();
         });
 
+        // Alternar entre o modo de consulta pública e modo administrador privado
+        function toggleAdminMode() {
+            if (!isAdmin) {
+                const senhaIntroduzida = prompt("Introduz a tua palavra-passe para ativares o modo de edição:");
+                if (senhaIntroduzida === SENHA_ADMIN) {
+                    isAdmin = true;
+                    alert("Acesso autorizado! Modo Administrador ativado.");
+                } else if (senhaIntroduzida !== null) {
+                    alert("Palavra-passe incorreta. Mantém-se o modo de consulta.");
+                }
+            } else {
+                isAdmin = false;
+                alert("Modo Administrador desativado.");
+            }
+            atualizarInterface();
+        }
+
         // Gravar nova pesca
         function guardarPesca(e) {
             e.preventDefault();
+            if (!isAdmin) return alert("Erro: Não tens permissões para adicionar dados.");
 
             const novaPesca = {
                 id: Date.now(),
                 data: document.getElementById('data').value,
+                local: document.getElementById('local').value,
                 lua: document.getElementById('lua').value,
                 mareTipo: document.getElementById('mare-tipo').value,
                 mareAltura: document.getElementById('mare-altura').value || 'N/A',
@@ -199,7 +229,7 @@
                 peixes: document.getElementById('peixes').value
             };
 
-            pescas.unshift(novaPesca); // Adiciona no início da lista
+            pescas.unshift(novaPesca);
             localStorage.setItem('surfcasting_logs', JSON.stringify(pescas));
             
             document.getElementById('form-pesca').reset();
@@ -210,39 +240,62 @@
 
         // Apagar um registo
         function eliminarPesca(id) {
-            if(confirm("Tens a certeza que queres eliminar este registo de pesca?")) {
+            if (!isAdmin) return alert("Erro: Não tens permissões para eliminar dados.");
+            if (confirm("Tens a certeza que queres eliminar este registo de pesca?")) {
                 pescas = pescas.filter(p => p.id !== id);
                 localStorage.setItem('surfcasting_logs', JSON.stringify(pescas));
                 atualizarInterface();
             }
         }
 
-        // Atualizar listagem e analíticas
+        // Atualizar todos os elements visuais
         function atualizarInterface() {
+            const seccaoForm = document.getElementById('seccao-formulario');
+            if (isAdmin) {
+                seccaoForm.classList.remove('hidden');
+                document.getElementById('btn-admin-toggle').className = "flex items-center gap-2 bg-amber-600 hover:bg-amber-500 px-4 py-2 rounded-lg text-sm font-medium transition text-white";
+                document.getElementById('txt-lock').innerText = "Modo Edição (Admin)";
+                document.getElementById('icon-lock').setAttribute('data-lucide', 'unlock');
+            } else {
+                seccaoForm.classList.add('hidden');
+                document.getElementById('btn-admin-toggle').className = "flex items-center gap-2 bg-slate-700 hover:bg-slate-600 px-4 py-2 rounded-lg text-sm font-medium transition text-amber-400";
+                document.getElementById('txt-lock').innerText = "Modo Consulta";
+                document.getElementById('icon-lock').setAttribute('data-lucide', 'lock');
+            }
+
             renderHistorico();
             calcularMetricas();
-            lucide.createIcons(); // Recarrega os ícones gerados dinamicamente
+            lucide.createIcons();
         }
 
-        // Renderizar o histórico no HTML
+        // Renderizar os cartões com os dados das saídas
         function renderHistorico() {
             const container = document.getElementById('historico-lista');
             if (pescas.length === 0) {
-                container.innerHTML = `<p class="text-slate-500 text-center py-8 text-sm">Ainda não tens nenhuma saída registada.</p>`;
+                container.innerHTML = `<p class="text-slate-500 text-center py-8 text-sm">Ainda não há saídas registadas no diário.</p>`;
                 return;
             }
 
             container.innerHTML = pescas.map(p => {
                 const isGrade = p.peixes.toLowerCase().includes('grade') || p.peixes.trim() === '0' || p.peixes.toLowerCase() === 'nenhum';
+                const localStr = p.local || 'Não especificado';
+                
+                const botaoEliminar = isAdmin ? `
+                    <button onclick="eliminarPesca(${p.id})" class="absolute top-4 right-4 text-slate-500 hover:text-red-400 transition" title="Eliminar registo">
+                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                    </button>
+                ` : '';
+
                 return `
                     <div class="bg-slate-900 border ${isGrade ? 'border-amber-900/40 bg-amber-950/10' : 'border-slate-700'} p-4 rounded-lg relative group transition hover:border-slate-600">
-                        <button onclick="eliminarPesca(${p.id})" class="absolute top-4 right-4 text-slate-500 hover:text-red-400 transition" title="Eliminar registo">
-                            <i data-lucide="trash-2" class="w-4 h-4"></i>
-                        </button>
+                        ${botaoEliminar}
                         
                         <div class="flex flex-wrap items-center gap-x-4 gap-y-1 mb-2 text-xs font-semibold text-slate-400">
                             <span class="text-blue-400 flex items-center gap-1 text-sm font-bold">
                                 <i data-lucide="calendar" class="w-3.5 h-3.5"></i> ${formatarData(p.data)}
+                            </span>
+                            <span class="text-emerald-400 flex items-center gap-1 text-sm font-bold bg-slate-800/80 px-2 py-0.5 rounded border border-slate-700">
+                                <i data-lucide="map-pin" class="w-3 h-3"></i> ${localStr}
                             </span>
                             <span class="bg-slate-800 px-2 py-0.5 rounded border border-slate-700">${p.lua}</span>
                             <span class="bg-slate-800 px-2 py-0.5 rounded border border-slate-700">${p.mareTipo} (${p.mareAltura}m)</span>
@@ -263,27 +316,26 @@
             }).join('');
         }
 
-        // Auxiliar para formatar data DD/MM/AAAA
         function formatarData(dataStr) {
             const partes = dataStr.split('-');
             if(partes.length !== 3) return dataStr;
             return `${partes[2]}/${partes[1]}/${partes[0]}`;
         }
 
-        // Lógica de Analytics (Cálculo de padrões)
+        // Lógica de Analytics Avançada
         function calcularMetricas() {
             const total = pescas.length;
             document.getElementById('stat-total').innerText = total;
 
             if (total === 0) {
                 document.getElementById('stat-sucesso').innerText = '0%';
+                document.getElementById('best-local').innerText = '-';
                 document.getElementById('best-lua').innerText = '-';
                 document.getElementById('best-mare').innerText = '-';
                 document.getElementById('best-isco').innerText = '-';
                 return;
             }
 
-            // Filtrar apenas saídas com capturas (sem a palavra "grade")
             const saídasComSucesso = pescas.filter(p => {
                 const txt = p.peixes.toLowerCase();
                 return !(txt.includes('grade') || txt === '0' || txt === 'nenhum');
@@ -293,27 +345,29 @@
             document.getElementById('stat-sucesso').innerText = `${taxaSucesso}%`;
 
             if (saídasComSucesso.length === 0) {
+                document.getElementById('best-local').innerText = 'Sem capturas';
                 document.getElementById('best-lua').innerText = 'Sem capturas';
                 document.getElementById('best-mare').innerText = 'Sem capturas';
                 document.getElementById('best-isco').innerText = 'Sem capturas';
                 return;
             }
 
-            // Contadores de frequência para os padrões
-            let luas = {}, mares = {}, iscosContador = {};
+            let locais = {}, luas = {}, mares = {}, iscosContador = {};
 
             saídasComSucesso.forEach(p => {
-                // Lua
+                if (p.local) {
+                    const locLimpo = p.local.trim();
+                    locais[locLimpo] = (locais[locLimpo] || 0) + 1;
+                }
                 luas[p.lua] = (luas[p.lua] || 0) + 1;
-                // Maré
                 mares[p.mareTipo] = (mares[p.mareTipo] || 0) + 1;
-                // Iscos (divide por vírgula para contar individualmente)
                 p.iscos.split(',').forEach(isco => {
                     const limpo = isco.trim().toLowerCase();
                     if(limpo) iscosContador[limpo] = (iscosContador[limpo] || 0) + 1;
                 });
             });
 
+            document.getElementById('best-local').innerText = obterMaiorObjeto(locais);
             document.getElementById('best-lua').innerText = obterMaiorObjeto(luas);
             document.getElementById('best-mare').innerText = obterMaiorObjeto(mares);
             
@@ -321,11 +375,12 @@
             document.getElementById('best-isco').innerText = melhorIsco ? melhorIsco.charAt(0).toUpperCase() + melhorIsco.slice(1) : '-';
         }
 
+        // Encontrar maior chave no objeto
         function obterMaiorObjeto(obj) {
             return Object.keys(obj).reduce((a, b) => obj[a] > obj[b] ? a : b, '-');
         }
 
-        // Exportação de Dados em formato JSON (Backup completo legível por máquinas)
+        // Exportação JSON
         function exportarDados() {
             if (pescas.length === 0) return alert("Não existem dados para exportar.");
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(pescas, null, 2));
@@ -337,21 +392,20 @@
             downloadAnchor.remove();
         }
 
-        // Exportação em CSV (Excelente para abrir diretamente no Excel/Sheets)
+        // Exportação CSV
         function exportarCSV() {
             if (pescas.length === 0) return alert("Não existem dados para exportar.");
             
-            // Cabeçalhos do ficheiro Excel
-            let csvContent = "data:text/csv;charset=utf-8,\uFEFF"; // BOM para suportar acentos em PT no Excel
-            csvContent += "Data;Fase da Lua;Tipo de Mare;Altura Mare (m);Ondas (m);Vento;Iscos;Peixes Pescados\n";
+            let csvContent = "data:text/csv;charset=utf-8,\uFEFF";
+            csvContent += "Data;Local;Fase da Lua;Tipo de Mare;Altura Mare (m);Ondas (m);Vento;Iscos;Peixes Pescados\n";
 
             pescas.forEach(p => {
-                // Escapar aspas e limpar quebras de linha para não quebrar a estrutura CSV
                 let linha = [
                     formatarData(p.data),
+                    `"${(p.local || 'N/A').replace(/"/g, '""')}"`,
                     p.lua,
                     p.mareTipo,
-                    p.mareAltura.replace('.', ','), // padrão português de decimais
+                    p.mareAltura.replace('.', ','),
                     p.ondas.replace('.', ','),
                     `"${p.vento.replace(/"/g, '""')}"`,
                     `"${p.iscos.replace(/"/g, '""')}"`,

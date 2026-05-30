@@ -67,6 +67,28 @@
                         </div>
                     </div>
 
+                    <!-- NOVA LINHA: Horários e Total de Peixes -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 bg-slate-900/40 p-4 rounded-lg border border-slate-700/60">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-400 mb-1 flex items-center gap-1">
+                                <i data-lucide="clock" class="w-3.5 h-3.5 text-cyan-400"></i> Hora de Início
+                            </label>
+                            <input type="time" id="hora-inicio" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 focus:outline-none focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-400 mb-1 flex items-center gap-1">
+                                <i data-lucide="clock" class="w-3.5 h-3.5 text-amber-400"></i> Hora de Fim
+                            </label>
+                            <input type="time" id="hora-fim" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 focus:outline-none focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-400 mb-1 flex items-center gap-1">
+                                <i data-lucide="hash" class="w-3.5 h-3.5 text-emerald-400"></i> Total de Capturas
+                            </label>
+                            <input type="number" id="total-capturas" min="0" placeholder="Ex: 3 (0 se for grade)" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 focus:outline-none focus:border-blue-500">
+                        </div>
+                    </div>
+
                     <!-- Linha 2: Maré -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
@@ -102,10 +124,10 @@
                         <input type="text" id="iscos" placeholder="Ex: Casulo, Ganso, Caranguejo, Longueirão" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 focus:outline-none focus:border-blue-500">
                     </div>
 
-                    <!-- Linha 5: Capturas -->
+                    <!-- Linha 5: Detalhe das Capturas -->
                     <div>
-                        <label class="block text-sm font-medium text-slate-400 mb-1">Peixes Pescados (Espécie e quantidade ou tamanho)</label>
-                        <textarea id="peixes" rows="2" placeholder="Ex: 2 Robalos (35cm, 42cm), 1 Sargo (800g) ou 'Grade'" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 focus:outline-none focus:border-blue-500"></textarea>
+                        <label class="block text-sm font-medium text-slate-400 mb-1">Especificação das Peças (Espécies, tamanhos, observações)</label>
+                        <textarea id="peixes" rows="2" placeholder="Ex: 2 Robalos (35cm, 42cm), 1 Sargo (800g) ou escrever 'Grade'" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 focus:outline-none focus:border-blue-500"></textarea>
                     </div>
 
                     <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 rounded-lg transition shadow-lg flex items-center justify-center gap-2">
@@ -135,7 +157,7 @@
                 </div>
 
                 <div class="space-y-6">
-                    <!-- Estatística Básica -->
+                    <!-- Estatísticas Básicas Avançadas -->
                     <div class="grid grid-cols-2 gap-4">
                         <div class="bg-slate-900 p-4 rounded-lg border border-slate-700 text-center">
                             <span class="text-xs text-slate-400 block mb-1 uppercase tracking-wider">Total Saídas</span>
@@ -144,6 +166,13 @@
                         <div class="bg-slate-900 p-4 rounded-lg border border-slate-700 text-center">
                             <span class="text-xs text-slate-400 block mb-1 uppercase tracking-wider">Taxa de Sucesso</span>
                             <span id="stat-sucesso" class="text-3xl font-bold text-emerald-400">0%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 gap-4">
+                        <div class="bg-slate-900 p-4 rounded-lg border border-slate-700 text-center">
+                            <span class="text-xs text-slate-400 block mb-1 uppercase tracking-wider">Total de Peixes Capturados</span>
+                            <span id="stat-peixes-total" class="text-3xl font-bold text-cyan-400">0</span>
                         </div>
                     </div>
 
@@ -172,7 +201,7 @@
                     </div>
 
                     <div class="text-xs text-slate-500 italic text-center pt-2">
-                        Os padrões são calculados com base nas saídas onde existiram capturas efetivas (excluindo grades).
+                        Os padrões e totais de capturas consideram os novos campos estruturados inseridos no diário.
                     </div>
                 </div>
             </section>
@@ -221,6 +250,9 @@
                 data: document.getElementById('data').value,
                 local: document.getElementById('local').value,
                 lua: document.getElementById('lua').value,
+                horaInicio: document.getElementById('hora-inicio').value || 'N/A',
+                horaFim: document.getElementById('hora-fim').value || 'N/A',
+                totalCapturas: parseInt(document.getElementById('total-capturas').value) || 0,
                 mareTipo: document.getElementById('mare-tipo').value,
                 mareAltura: document.getElementById('mare-altura').value || 'N/A',
                 ondas: document.getElementById('ondas').value || 'N/A',
@@ -248,7 +280,7 @@
             }
         }
 
-        // Atualizar todos os elements visuais
+        // Atualizar todos os elementos visuais
         function atualizarInterface() {
             const seccaoForm = document.getElementById('seccao-formulario');
             if (isAdmin) {
@@ -277,8 +309,11 @@
             }
 
             container.innerHTML = pescas.map(p => {
-                const isGrade = p.peixes.toLowerCase().includes('grade') || p.peixes.trim() === '0' || p.peixes.toLowerCase() === 'nenhum';
+                const totalPeixes = p.totalCapturas !== undefined ? p.totalCapturas : 0;
+                const isGrade = totalPeixes === 0 || p.peixes.toLowerCase().includes('grade') || p.peixes.toLowerCase() === 'nenhum';
                 const localStr = p.local || 'Não especificado';
+                const hInicio = p.horaInicio || 'N/A';
+                const hFim = p.horaFim || 'N/A';
                 
                 const botaoEliminar = isAdmin ? `
                     <button onclick="eliminarPesca(${p.id})" class="absolute top-4 right-4 text-slate-500 hover:text-red-400 transition" title="Eliminar registo">
@@ -290,26 +325,41 @@
                     <div class="bg-slate-900 border ${isGrade ? 'border-amber-900/40 bg-amber-950/10' : 'border-slate-700'} p-4 rounded-lg relative group transition hover:border-slate-600">
                         ${botaoEliminar}
                         
-                        <div class="flex flex-wrap items-center gap-x-4 gap-y-1 mb-2 text-xs font-semibold text-slate-400">
+                        <div class="flex flex-wrap items-center gap-x-4 gap-y-1.5 mb-2 text-xs font-semibold text-slate-400">
                             <span class="text-blue-400 flex items-center gap-1 text-sm font-bold">
                                 <i data-lucide="calendar" class="w-3.5 h-3.5"></i> ${formatarData(p.data)}
                             </span>
                             <span class="text-emerald-400 flex items-center gap-1 text-sm font-bold bg-slate-800/80 px-2 py-0.5 rounded border border-slate-700">
                                 <i data-lucide="map-pin" class="w-3 h-3"></i> ${localStr}
                             </span>
-                            <span class="bg-slate-800 px-2 py-0.5 rounded border border-slate-700">${p.lua}</span>
-                            <span class="bg-slate-800 px-2 py-0.5 rounded border border-slate-700">${p.mareTipo} (${p.mareAltura}m)</span>
+                            <span class="bg-slate-800 px-2 py-0.5 rounded border border-slate-700 text-slate-300 flex items-center gap-1">
+                                <i data-lucide="clock" class="w-3 h-3 text-cyan-400"></i> ${hInicio} às ${hFim}
+                            </span>
                         </div>
 
-                        <div class="grid grid-cols-2 gap-2 text-xs my-3 text-slate-300 border-t border-b border-slate-800/60 py-2">
-                            <div><span class="text-slate-500">Mar:</span> ${p.ondas}m</div>
-                            <div><span class="text-slate-500">Vento:</span> ${p.vento}</div>
-                            <div class="col-span-2"><span class="text-slate-500">Iscos:</span> <span class="text-cyan-300">${p.iscos}</span></div>
+                        <div class="flex flex-wrap gap-2 text-xs mb-3 text-slate-300">
+                            <span class="bg-slate-800/50 px-2 py-1 rounded border border-slate-700/40">${p.lua}</span>
+                            <span class="bg-slate-800/50 px-2 py-1 rounded border border-slate-700/40">${p.mareTipo} (${p.mareAltura}m)</span>
+                            <span class="bg-slate-800/50 px-2 py-1 rounded border border-slate-700/40">Ondas: ${p.ondas}m</span>
+                            <span class="bg-slate-800/50 px-2 py-1 rounded border border-slate-700/40">Vento: ${p.vento}</span>
                         </div>
 
-                        <div class="mt-2 text-sm">
-                            <span class="text-xs text-slate-500 block">Capturas:</span>
-                            <p class="${isGrade ? 'text-amber-400/80 italic' : 'text-emerald-400 font-medium'}">${p.peixes}</p>
+                        <div class="text-xs my-2 py-2 border-t border-slate-800/60">
+                            <span class="text-slate-500 block mb-0.5">Iscos:</span> 
+                            <span class="text-cyan-300 font-medium">${p.iscos}</span>
+                        </div>
+
+                        <div class="mt-2 pt-2 border-t border-slate-800/40 flex justify-between items-start gap-4">
+                            <div class="text-sm flex-1">
+                                <span class="text-xs text-slate-500 block">Detalhe das Peças:</span>
+                                <p class="${isGrade ? 'text-amber-400/80 italic' : 'text-emerald-400 font-medium'}">${p.peixes}</p>
+                            </div>
+                            <div class="text-right whitespace-nowrap">
+                                <span class="text-xs text-slate-500 block">Capturas</span>
+                                <span class="inline-block px-2.5 py-0.5 rounded-full text-xs font-bold ${isGrade ? 'bg-amber-950/60 text-amber-400 border border-amber-800/60' : 'bg-emerald-950/60 text-emerald-400 border border-emerald-800/60'}">
+                                    ${totalPeixes}peixes
+                                </span>
+                            </div>
                         </div>
                     </div>
                 `;
@@ -322,10 +372,17 @@
             return `${partes[2]}/${partes[1]}/${partes[0]}`;
         }
 
-        // Lógica de Analytics Avançada
+        // Lógica de Analytics Avançada (V3)
         function calcularMetricas() {
             const total = pescas.length;
             document.getElementById('stat-total').innerText = total;
+
+            // Calcular a soma real de peixes capturados em todo o histórico
+            let totalPeixesGlobal = 0;
+            pescas.forEach(p => {
+                totalPeixesGlobal += (parseInt(p.totalCapturas) || 0);
+            });
+            document.getElementById('stat-peixes-total').innerText = totalPeixesGlobal;
 
             if (total === 0) {
                 document.getElementById('stat-sucesso').innerText = '0%';
@@ -336,8 +393,11 @@
                 return;
             }
 
+            // Uma saída tem sucesso se o número de capturas for maior que 0 e não contiver rótulos de grade óbvios
             const saídasComSucesso = pescas.filter(p => {
+                const totalC = parseInt(p.totalCapturas) || 0;
                 const txt = p.peixes.toLowerCase();
+                if (totalC > 0) return true;
                 return !(txt.includes('grade') || txt === '0' || txt === 'nenhum');
             });
 
@@ -375,12 +435,10 @@
             document.getElementById('best-isco').innerText = melhorIsco ? melhorIsco.charAt(0).toUpperCase() + melhorIsco.slice(1) : '-';
         }
 
-        // Encontrar maior chave no objeto
         function obterMaiorObjeto(obj) {
             return Object.keys(obj).reduce((a, b) => obj[a] > obj[b] ? a : b, '-');
         }
 
-        // Exportação JSON
         function exportarDados() {
             if (pescas.length === 0) return alert("Não existem dados para exportar.");
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(pescas, null, 2));
@@ -392,26 +450,31 @@
             downloadAnchor.remove();
         }
 
-        // Exportação CSV
         function exportarCSV() {
             if (pescas.length === 0) return alert("Não existem dados para exportar.");
             
-            let csvContent = "data:text/csv;charset=utf-8,\uFEFF";
-            csvContent += "Data;Local;Fase da Lua;Tipo de Mare;Altura Mare (m);Ondas (m);Vento;Iscos;Peixes Pescados\n";
+            let csvContent = "data:text/csv;charset=utf-8,﻿";
+            csvContent += "Data;Local;Hora Inicio;Hora Fim;Total Capturas;Fase da Lua;Tipo de Mare;Altura Mare (m);Ondas (m);Vento;Iscos;Peixes Pescados
+";
 
             pescas.forEach(p => {
                 let linha = [
                     formatarData(p.data),
                     `"${(p.local || 'N/A').replace(/"/g, '""')}"`,
+                    p.horaInicio || 'N/A',
+                    p.horaFim || 'N/A',
+                    p.totalCapturas || 0,
                     p.lua,
                     p.mareTipo,
                     p.mareAltura.replace('.', ','),
                     p.ondas.replace('.', ','),
                     `"${p.vento.replace(/"/g, '""')}"`,
                     `"${p.iscos.replace(/"/g, '""')}"`,
-                    `"${p.peixes.replace(/"/g, '""').replace(/\n/g, ' ')}"`
+                    `"${p.peixes.replace(/"/g, '""').replace(/
+/g, ' ')}"`
                 ].join(";");
-                csvContent += linha + "\n";
+                csvContent += linha + "
+";
             });
 
             const encodedUri = encodeURI(csvContent);

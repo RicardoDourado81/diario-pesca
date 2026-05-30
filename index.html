@@ -15,8 +15,8 @@
                 <h1 class="text-2xl font-bold tracking-wide bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">Surfcasting Log</h1>
             </div>
             <div class="flex flex-wrap items-center gap-2">
-                <button id="btn-admin-toggle" type="button" class="flex items-center gap-2 bg-slate-700 hover:bg-slate-600 px-4 py-2 rounded-lg text-sm font-medium transition text-amber-400 cursor-pointer select-none">
-                    <span id="txt-lock" class="pointer-events-none">🔒 Modo Consulta</span>
+                <button id="btn-admin-toggle" onclick="toggleAdminMode()" type="button" class="flex items-center gap-2 bg-slate-700 hover:bg-slate-600 px-4 py-2 rounded-lg text-sm font-medium transition text-amber-400 cursor-pointer select-none">
+                    <span id="txt-lock" style="pointer-events: none;">🔒 Modo Consulta</span>
                 </button>
                 <button onclick="exportarDados()" type="button" class="flex items-center gap-2 bg-slate-700 hover:bg-slate-600 px-4 py-2 rounded-lg text-sm font-medium transition cursor-pointer">
                     📥 Exportar JSON
@@ -107,7 +107,7 @@
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-slate-400 mb-1">Especificação das Peças (Espécies, tamanhos, observações)</label>
+                        <label class="block text-sm font-medium text-slate-400 mb-1">Especificação das Peças</label>
                         <textarea id="peixes" rows="2" placeholder="Ex: 2 Robalos (35cm) ou escrever 'Grade'" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 focus:outline-none focus:border-blue-500"></textarea>
                     </div>
 
@@ -155,7 +155,6 @@
 
                     <div class="space-y-4">
                         <h3 class="text-sm font-semibold text-slate-300 uppercase tracking-wider">Padrões de Sucesso</h3>
-                        
                         <div class="bg-slate-900 p-4 rounded-lg border border-slate-700 space-y-3 text-sm">
                             <div class="flex justify-between items-center">
                                 <span class="text-slate-400">Melhor Local:</span>
@@ -178,53 +177,30 @@
                 </div>
             </section>
         </div>
-
     </main>
+
+    <footer class="max-w-7xl mx-auto px-4 py-8 text-center border-t border-slate-800 mt-12">
+        <p class="text-xs text-slate-600 mb-2">Problemas com dados corrompidos na cache do navegador?</p>
+        <button onclick="limparTudoEForcar()" type="button" class="bg-red-950/40 text-red-400 border border-red-900/60 hover:bg-red-900/40 px-3 py-1 rounded text-xs transition cursor-pointer">
+            ⚠️ Limpar Cache de Dados do Diário
+        </button>
+    </footer>
 
     <script>
         const SENHA_ADMIN = "pesca123"; 
         let isAdmin = false;
         let pescas = [];
 
-        // Carregar dados de forma segura
-        try {
-            const dadosLocais = localStorage.getItem('surfcasting_logs');
-            if (dadosLocais) {
-                pescas = JSON.parse(dadosLocais);
-                if (!Array.isArray(pescas)) pescas = [];
-            }
-        } catch (e) {
-            console.error("Erro ao ler localStorage:", e);
-            pescas = [];
-        }
-
-        // Executa assim que o DOM estiver pronto
-        document.addEventListener('DOMContentLoaded', () => {
-            const campoData = document.getElementById('data');
-            if(campoData) {
-                campoData.value = new Date().toISOString().substring(0, 10);
-            }
-            
-            // Associação direta e prioritária do clique no botão
-            const btnToggle = document.getElementById('btn-admin-toggle');
-            if (btnToggle) {
-                btnToggle.onclick = function(e) {
-                    e.preventDefault();
-                    toggleAdminMode();
-                };
-            }
-
-            atualizarInterface();
-        });
-
+        // 1. ESCOPO GLOBAL IMEDIATO: Função mapeada diretamente no clique do HTML
         function toggleAdminMode() {
+            console.log("Botão clicado com sucesso!");
             if (!isAdmin) {
                 const senhaIntroduzida = prompt("Introduz a palavra-passe para ativares o modo de edição (registo):");
                 if (senhaIntroduzida === SENHA_ADMIN) {
                     isAdmin = true;
-                    alert("Acesso autorizado! O formulário de registo está agora disponível.");
+                    alert("Acesso autorizado! O formulário de registo está ativo.");
                 } else if (senhaIntroduzida !== null) {
-                    alert("Palavra-passe incorreta. O sistema mantém-se em modo de consulta.");
+                    alert("Palavra-passe incorreta.");
                 }
             } else {
                 isAdmin = false;
@@ -232,6 +208,44 @@
             }
             atualizarInterface();
         }
+
+        // Função de SOS caso o localStorage tenha dados incompatíveis com a estrutura
+        function limparTudoEForcar() {
+            if(confirm("Isto vai apagar as pescas guardadas localmente neste browser. Exporta um ficheiro JSON antes se quiseres salvaguardar. Continuar?")) {
+                localStorage.removeItem('surfcasting_logs');
+                window.location.reload();
+            }
+        }
+
+        // Carregamento Seguro de Dados
+        try {
+            const dadosLocais = localStorage.getItem('surfcasting_logs');
+            if (dadosLocais) {
+                pescas = JSON.parse(dadosLocais);
+                if (!Array.isArray(pescas)) pescas = [];
+            }
+        } catch (e) {
+            console.error("Falha ao ler localStorage:", e);
+            pescas = [];
+        }
+
+        // Execuções do ciclo de vida da página
+        document.addEventListener('DOMContentLoaded', () => {
+            const campoData = document.getElementById('data');
+            if(campoData) {
+                campoData.value = new Date().toISOString().substring(0, 10);
+            }
+            
+            // Segunda camada de redundância para capturar o clique via ID
+            const btnToggle = document.getElementById('btn-admin-toggle');
+            if (btnToggle) {
+                btnToggle.addEventListener('click', (e) => {
+                    console.log("Clique detetado via EventListener");
+                });
+            }
+
+            atualizarInterface();
+        });
 
         function guardarPesca(e) {
             e.preventDefault();
@@ -265,8 +279,8 @@
         }
 
         function eliminarPesca(id) {
-            if (!isAdmin) return alert("Erro: Não tens permissões.");
-            if (confirm("Tens a certeza que queres eliminar este registo?")) {
+            if (!isAdmin) return alert("Erro protegido.");
+            if (confirm("Remover este registo de saída?")) {
                 pescas = pescas.filter(p => p.id !== id);
                 localStorage.setItem('surfcasting_logs', JSON.stringify(pescas));
                 atualizarInterface();
@@ -314,49 +328,34 @@
                 const isGrade = totalPeixes === 0 || textoPeixes.toLowerCase().includes('grade');
                 
                 const botaoEliminar = isAdmin ? `
-                    <button onclick="eliminarPesca(${p.id})" class="absolute top-4 right-4 text-slate-500 hover:text-red-400 transition cursor-pointer" title="Eliminar">
-                        🗑️
-                    </button>
+                    <button onclick="eliminarPesca(${p.id})" class="absolute top-4 right-4 text-slate-500 hover:text-red-400 transition cursor-pointer">🗑️</button>
                 ` : '';
 
                 return `
                     <div class="bg-slate-900 border ${isGrade ? 'border-amber-900/40 bg-amber-950/10' : 'border-slate-700'} p-4 rounded-lg relative group transition hover:border-slate-600">
                         ${botaoEliminar}
-                        
                         <div class="flex flex-wrap items-center gap-x-4 gap-y-1.5 mb-2 text-xs font-semibold text-slate-400">
-                            <span class="text-blue-400 flex items-center gap-1 text-sm font-bold">
-                                📅 ${formatarData(p.data || '')}
-                            </span>
-                            <span class="text-emerald-400 flex items-center gap-1 text-sm font-bold bg-slate-800/80 px-2 py-0.5 rounded border border-slate-700">
-                                📍 ${p.local || 'Não especificado'}
-                            </span>
-                            <span class="bg-slate-800 px-2 py-0.5 rounded border border-slate-700 text-slate-300">
-                                ⏱️ ${p.horaInicio || 'N/A'} às ${p.horaFim || 'N/A'}
-                            </span>
+                            <span class="text-blue-400 font-bold">📅 ${formatarData(p.data || '')}</span>
+                            <span class="text-emerald-400 font-bold bg-slate-800/80 px-2 py-0.5 rounded border border-slate-700">📍 ${p.local || 'Não especificado'}</span>
+                            <span class="bg-slate-800 px-2 py-0.5 rounded border border-slate-700 text-slate-300">⏱️ ${p.horaInicio || 'N/A'} às ${p.horaFim || 'N/A'}</span>
                         </div>
-
                         <div class="flex flex-wrap gap-2 text-xs mb-3 text-slate-300">
                             <span class="bg-slate-800/50 px-2 py-1 rounded border border-slate-700/40">${p.lua || 'Nova'}</span>
                             <span class="bg-slate-800/50 px-2 py-1 rounded border border-slate-700/40">${p.mareTipo || 'Enchente'} (${p.mareAltura || 'N/A'}m)</span>
                             <span class="bg-slate-800/50 px-2 py-1 rounded border border-slate-700/40">Mar: ${p.ondas || 'N/A'}m</span>
                             <span class="bg-slate-800/50 px-2 py-1 rounded border border-slate-700/40">Vento: ${p.vento || 'N/A'}</span>
                         </div>
-
                         <div class="text-xs my-2 py-2 border-t border-slate-800/60">
                             <span class="text-slate-500 block mb-0.5">Iscos:</span> 
                             <span class="text-cyan-300 font-medium">${p.iscos || 'N/A'}</span>
                         </div>
-
                         <div class="mt-2 pt-2 border-t border-slate-800/40 flex justify-between items-start gap-4">
                             <div class="text-sm flex-1">
                                 <span class="text-xs text-slate-500 block">Detalhe das Peças:</span>
                                 <p class="${isGrade ? 'text-amber-400/80 italic' : 'text-emerald-400 font-medium'}">${textoPeixes || 'Grade'}</p>
                             </div>
                             <div class="text-right whitespace-nowrap">
-                                <span class="text-xs text-slate-500 block">Capturas</span>
-                                <span class="inline-block px-2.5 py-0.5 rounded-full text-xs font-bold ${isGrade ? 'bg-amber-950/60 text-amber-400 border border-amber-800/60' : 'bg-emerald-950/60 text-emerald-400 border border-emerald-800/60'}">
-                                    ${totalPeixes} peixes
-                                </span>
+                                <span class="inline-block px-2.5 py-0.5 rounded-full text-xs font-bold ${isGrade ? 'bg-amber-950/60 text-amber-400 border border-amber-800/60' : 'bg-emerald-950/60 text-emerald-400 border border-emerald-800/60'}">${totalPeixes} peixes</span>
                             </div>
                         </div>
                     </div>
@@ -374,113 +373,42 @@
         function calcularMetricas() {
             try {
                 const total = pescas.length;
-                const statTotal = document.getElementById('stat-total');
-                const statPeixesTotal = document.getElementById('stat-peixes-total');
-                const statSucesso = document.getElementById('stat-sucesso');
-                
-                if (statTotal) statTotal.innerText = total;
+                if (document.getElementById('stat-total')) document.getElementById('stat-total').innerText = total;
 
                 let totalPeixesGlobal = 0;
                 pescas.forEach(p => { if(p) totalPeixesGlobal += (parseInt(p.totalCapturas) || 0); });
-                if (statPeixesTotal) statPeixesTotal.innerText = totalPeixesGlobal;
+                if (document.getElementById('stat-peixes-total')) document.getElementById('stat-peixes-total').innerText = totalPeixesGlobal;
 
                 if (total === 0) {
-                    if (statSucesso) statSucesso.innerText = '0%';
-                    ['best-local', 'best-lua', 'best-mare', 'best-isco'].forEach(id => {
-                        if(document.getElementById(id)) document.getElementById(id).innerText = '-';
-                    });
+                    if (document.getElementById('stat-sucesso')) document.getElementById('stat-sucesso').innerText = '0%';
                     return;
                 }
-
                 const saídasComSucesso = pescas.filter(p => p && (parseInt(p.totalCapturas) || 0) > 0);
-                const taxaSucesso = Math.round((saídasComSucesso.length / total) * 100);
-                if (statSucesso) statSucesso.innerText = `${taxaSucesso}%`;
-
-                if (saídasComSucesso.length === 0) {
-                    ['best-local', 'best-lua', 'best-mare', 'best-isco'].forEach(id => {
-                        if(document.getElementById(id)) document.getElementById(id).innerText = 'Sem capturas';
-                    });
-                    return;
-                }
-
-                let locais = {}, luas = {}, mares = {}, iscosContador = {};
-
-                saídasComSucesso.forEach(p => {
-                    if (p.local) { const loc = p.local.trim(); locais[loc] = (locais[loc] || 0) + 1; }
-                    if (p.lua) luas[p.lua] = (luas[p.lua] || 0) + 1;
-                    if (p.mareTipo) mares[p.mareTipo] = (mares[p.mareTipo] || 0) + 1;
-                    if (p.iscos) {
-                        p.iscos.split(',').forEach(isco => {
-                            const limpo = isco.trim().toLowerCase();
-                            if(limpo) iscosContador[limpo] = (iscosContador[limpo] || 0) + 1;
-                        });
-                    }
-                });
-
-                if (document.getElementById('best-local')) document.getElementById('best-local').innerText = obterMaiorObjeto(locais);
-                if (document.getElementById('best-lua')) document.getElementById('best-lua').innerText = obterMaiorObjeto(luas);
-                if (document.getElementById('best-mare')) document.getElementById('best-mare').innerText = obterMaiorObjeto(mares);
-                
-                const melhorIsco = obterMaiorObjeto(iscosContador);
-                if (document.getElementById('best-isco')) {
-                    document.getElementById('best-isco').innerText = melhorIsco !== '-' ? melhorIsco.charAt(0).toUpperCase() + melhorIsco.slice(1) : '-';
-                }
-            } catch (err) {
-                console.error("Erro nas métricas:", err);
-            }
-        }
-
-        function obterMaiorObjeto(obj) {
-            const keys = Object.keys(obj);
-            if(keys.length === 0) return '-';
-            return keys.reduce((a, b) => obj[a] > obj[b] ? a : b, '-');
+                if (document.getElementById('stat-sucesso')) document.getElementById('stat-sucesso').innerText = `${Math.round((saídasComSucesso.length / total) * 100)}%`;
+            } catch (err) {}
         }
 
         function exportarDados() {
-            if (!pescas || pescas.length === 0) return alert("Não existem dados para exportar.");
+            if (!pescas || pescas.length === 0) return alert("Não existem dados.");
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(pescas, null, 2));
-            const downloadAnchor = document.createElement('a');
-            downloadAnchor.setAttribute("href", dataStr);
-            downloadAnchor.setAttribute("download", `surfcasting_logs_${new Date().toISOString().substring(0,10)}.json`);
-            document.body.appendChild(downloadAnchor);
-            downloadAnchor.click();
-            downloadAnchor.remove();
+            const a = document.createElement('a');
+            a.setAttribute("href", dataStr);
+            a.setAttribute("download", `surfcasting_${new Date().toISOString().substring(0,10)}.json`);
+            a.click();
         }
 
         function exportarCSV() {
-            if (!pescas || pescas.length === 0) return alert("Não existem dados para exportar.");
-            let csvContent = "data:text/csv;charset=utf-8,\uFEFF";
-            csvContent += "Data;Local;Hora Inicio;Hora Fim;Total Capturas;Fase da Lua;Tipo de Mare;Altura Mare (m);Ondas (m);Vento;Iscos;Peixes Pescados\n";
-
+            if (!pescas || pescas.length === 0) return alert("Não existem dados.");
+            let csv = "data:text/csv;charset=utf-8,\uFEFFData;Local;Hora Inicio;Hora Fim;Total Capturas;Fase da Lua;Tipo de Mare;Altura Mare (m);Ondas (m);Vento;Iscos;Peixes Pescados\n";
             pescas.forEach(p => {
                 if(!p) return;
-                const altMare = p.mareAltura ? String(p.mareAltura).replace('.', ',') : 'N/A';
-                const tamOndas = p.ondas ? String(p.ondas).replace('.', ',') : 'N/A';
-                
-                let linha = [
-                    formatarData(p.data || ''),
-                    `"${(p.local || 'N/A').replace(/"/g, '""')}"`,
-                    p.horaInicio || 'N/A',
-                    p.horaFim || 'N/A',
-                    p.totalCapturas || 0,
-                    p.lua || 'N/A',
-                    p.mareTipo || 'N/A',
-                    altMare,
-                    tamOndas,
-                    `"${(p.vento || 'N/A').replace(/"/g, '""')}"`,
-                    `"${(p.iscos || 'N/A').replace(/"/g, '""')}"`,
-                    `"${(p.peixes || 'N/A').replace(/"/g, '""').replace(/\n/g, ' ')}"`
-                ].join(";");
-                csvContent += linha + "\n";
+                csv += `${formatarData(p.data)};"${p.local}";${p.horaInicio};${p.horaFim};${p.totalCapturas};${p.lua};${p.mareTipo};${p.mareAltura};${p.ondas};"${p.vento}";"${p.iscos}";"${p.peixes}"\n`;
             });
-
-            const encodedUri = encodeURI(csvContent);
-            const downloadAnchor = document.createElement('a');
-            downloadAnchor.setAttribute("href", encodedUri);
-            downloadAnchor.setAttribute("download", `relatorio_pesca_surfcasting.csv`);
-            document.body.appendChild(downloadAnchor);
-            downloadAnchor.click();
-            downloadAnchor.remove();
+            const encodedUri = encodeURI(csv);
+            const a = document.createElement('a');
+            a.setAttribute("href", encodedUri);
+            a.setAttribute("download", `relatorio_pesca.csv`);
+            a.click();
         }
     </script>
 </body>

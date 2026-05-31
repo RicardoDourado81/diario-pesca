@@ -75,6 +75,21 @@
                         </div>
                     </div>
 
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 bg-slate-900/40 p-4 rounded-lg border border-slate-700/60">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-400 mb-1">⏱️ Hora Início</label>
+                            <input type="time" id="hora-inicio" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 focus:outline-none focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-400 mb-1">⏱️ Hora Fim</label>
+                            <input type="time" id="hora-fim" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 focus:outline-none focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-400 mb-1">🔢 Total Capturas</label>
+                            <input type="number" id="total-capturas" min="0" placeholder="Ex: 3" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 focus:outline-none focus:border-blue-500">
+                        </div>
+                    </div>
+
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-sm font-medium text-slate-400 mb-1">Tipo de Maré</label>
@@ -86,20 +101,14 @@
                             </select>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-slate-400 mb-1">🔢 Total Capturas</label>
-                            <input type="number" id="total-capturas" min="0" placeholder="Ex: 2" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 focus:outline-none focus:border-blue-500">
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
                             <label class="block text-sm font-medium text-slate-400 mb-1">Iscos Utilizados (separados por vírgula)</label>
                             <input type="text" id="iscos" placeholder="Ex: Casulo, Ganso" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 focus:outline-none focus:border-blue-500">
                         </div>
-                        <div>
-                            <label class="block text-sm font-medium text-slate-400 mb-1">Especificação das Peças</label>
-                            <input type="text" id="peixes" placeholder="Ex: 2 Robalos (35cm)" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 focus:outline-none focus:border-blue-500">
-                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-slate-400 mb-1">Especificação das Peças</label>
+                        <input type="text" id="peixes" placeholder="Ex: 2 Robalos (35cm)" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 focus:outline-none focus:border-blue-500">
                     </div>
 
                     <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 rounded-lg transition shadow-lg flex items-center justify-center gap-2 cursor-pointer">
@@ -188,14 +197,13 @@
         let utilizadorLogado = false;
         let pescas = [];
 
-        // Fluxo temporário para simular as permissões que a base de dados vai gerir
         function simularLogin() {
             utilizadorLogado = true;
             document.getElementById('zona-deslogado').classList.add('hidden');
             document.getElementById('aviso-login').classList.add('hidden');
             document.getElementById('zona-logado').classList.remove('hidden');
             document.getElementById('seccao-formulario').classList.remove('hidden');
-            alert("Sessão iniciada como 'Pescador_Pro'! O formulário de registo está agora disponível.");
+            alert("Sessão iniciada como 'Pescador_Pro'!");
             atualizarInterface();
         }
 
@@ -205,18 +213,17 @@
             document.getElementById('seccao-formulario').classList.add('hidden');
             document.getElementById('zona-deslogado').classList.remove('hidden');
             document.getElementById('aviso-login').classList.remove('hidden');
-            alert("Sessão terminada. Retornou ao Modo de Consulta Global.");
+            alert("Sessão terminada.");
             atualizarInterface();
         }
 
         function limparTudoEForcar() {
-            if(confirm("Desejas limpar a simulação local de dados comunitários?")) {
+            if(confirm("Desejas limpar a simulação local?")) {
                 localStorage.removeItem('surfcasting_logs_comunidade');
                 window.location.reload();
             }
         }
 
-        // Carregador seguro para o protótipo
         try {
             const dadosLocais = localStorage.getItem('surfcasting_logs_comunidade');
             if (dadosLocais) {
@@ -244,6 +251,8 @@
                 local: document.getElementById('local').value,
                 lua: document.getElementById('lua').value,
                 mareTipo: document.getElementById('mare-tipo').value,
+                horaInicio: document.getElementById('hora-inicio').value || 'N/A',
+                horaFim: document.getElementById('hora-fim').value || 'N/A',
                 totalCapturas: parseInt(document.getElementById('total-capturas').value) || 0,
                 iscos: document.getElementById('iscos').value,
                 peixes: document.getElementById('peixes').value
@@ -260,8 +269,6 @@
 
         function atualizarInterface() {
             renderHistorico();
-            
-            // Cálculo e exibição das estatísticas do Clube
             if(document.getElementById('stat-total')) document.getElementById('stat-total').innerText = pescas.length;
             
             let totalPeixesGlobal = 0;
@@ -291,9 +298,10 @@
                             <span class="text-slate-400">Por: <strong class="text-cyan-400">@${p.autor || 'Anónimo'}</strong></span>
                         </div>
                         <div class="grid grid-cols-2 gap-2 text-xs text-slate-300 mb-3">
-                            <div>📍 <span class="text-slate-500">Local:</span> ${p.local}</div>
-                            <div>🌊 <span class="text-slate-500">Maré:</span> ${p.mareTipo}</div>
-                            <div class="col-span-2">🌙 <span class="text-slate-500">Lua:</span> ${p.lua || 'Não indicada'}</div>
+                            <div>📍 <span class="text-slate-400">Local:</span> ${p.local}</div>
+                            <div>🌊 <span class="text-slate-400">Maré:</span> ${p.mareTipo}</div>
+                            <div>🌙 <span class="text-slate-400">Lua:</span> ${p.lua || 'N/A'}</div>
+                            <div class="text-amber-400 font-medium">⏱️ ${p.horaInicio} às ${p.horaFim}</div>
                         </div>
                         <div class="pt-2 border-t border-slate-800/60 flex justify-between items-center gap-4">
                             <div class="text-xs">

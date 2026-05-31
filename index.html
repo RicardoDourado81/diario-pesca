@@ -3,54 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Diário de Surfcasting</title>
+    <title>Surfcasting Comunitário Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-slate-900 text-slate-100 min-h-screen font-sans">
 
+    <!-- Header -->
     <header class="bg-slate-800 border-b border-slate-700 sticky top-0 z-50 shadow-md">
         <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
             <div class="flex items-center gap-3">
                 <span class="text-2xl">⚓</span>
-                <h1 class="text-2xl font-bold tracking-wide bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">Surfcasting Log</h1>
+                <h1 class="text-2xl font-bold tracking-wide bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">Surfcasting Club</h1>
             </div>
-            <div class="flex flex-wrap items-center gap-2">
-                <button id="btn-admin-toggle" onclick="toggleAdminMode()" type="button" class="flex items-center gap-2 bg-slate-700 hover:bg-slate-600 px-4 py-2 rounded-lg text-sm font-medium transition text-amber-400 cursor-pointer select-none">
-                    <span id="txt-lock" style="pointer-events: none;">🔒 Modo Consulta</span>
-                </button>
-                <button onclick="exportarDados()" type="button" class="flex items-center gap-2 bg-slate-700 hover:bg-slate-600 px-4 py-2 rounded-lg text-sm font-medium transition cursor-pointer">
-                    📥 Exportar JSON
-                </button>
-                <button onclick="exportarCSV()" type="button" class="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 px-4 py-2 rounded-lg text-sm font-medium transition cursor-pointer">
-                    📄 Exportar CSV
-                </button>
+            
+            <!-- Zona Dinâmica de Login / Perfil -->
+            <div class="flex flex-wrap items-center gap-3">
+                <!-- Se Não Logado -->
+                <div id="zona-deslogado" class="flex items-center gap-2">
+                    <span class="text-xs text-slate-400 hidden sm:inline">Modo Consulta Ativo</span>
+                    <button onclick="simularLogin()" type="button" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-medium transition cursor-pointer shadow">
+                        🔑 Entrar / Registar
+                    </button>
+                </div>
+                
+                <!-- Se Logado (Oculto por defeito) -->
+                <div id="zona-logado" class="hidden flex items-center gap-3 bg-slate-950/60 pl-3 pr-2 py-1 rounded-lg border border-slate-700">
+                    <div class="text-left">
+                        <p id="user-nome" class="text-xs font-bold text-slate-200">Pescador_Pro</p>
+                        <p class="text-[10px] text-emerald-400 font-mono">Plano Premium</p>
+                    </div>
+                    <button onclick="simularLogout()" type="button" class="bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-red-400 p-1.5 rounded transition text-xs cursor-pointer">
+                        Sair 👋
+                    </button>
+                </div>
             </div>
         </div>
     </header>
 
     <main class="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
         
+        <!-- COLUNA 1 & 2 -->
         <div class="lg:col-span-2 space-y-8">
             
+            <!-- Aviso para utilizadores não logados -->
+            <div id="aviso-login" class="bg-blue-950/40 border border-blue-500/30 p-4 rounded-xl flex flex-col sm:flex-row justify-between items-center gap-4 shadow-lg">
+                <div class="text-sm">
+                    <p class="font-semibold text-blue-300">Queres registar as tuas próprias saídas de pesca?</p>
+                    <p class="text-slate-400 text-xs">Cria uma conta gratuita para guardar o teu histórico e ver os teus padrões de sucesso.</p>
+                </div>
+                <button onclick="simularLogin()" class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold px-4 py-2 rounded transition whitespace-nowrap">Criar Conta Grátis</button>
+            </div>
+
+            <!-- Formulário de Registo (Só aparece se estiver Logado) -->
             <section id="seccao-formulario" class="bg-slate-800 border border-slate-700 rounded-xl p-6 shadow-xl hidden">
                 <div class="flex items-center gap-2 mb-6 border-b border-slate-700 pb-3">
                     <span class="text-lg">➕</span>
-                    <h2 class="text-xl font-semibold">Registar Nova Saída</h2>
+                    <h2 class="text-xl font-semibold">Registar Nova Saída (A gravar na tua conta)</h2>
                 </div>
                 
                 <form id="form-pesca" onsubmit="guardarPesca(event)" class="space-y-6">
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
                             <label class="block text-sm font-medium text-slate-400 mb-1">Data</label>
-                            <input type="date" id="data" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 focus:outline-none focus:border-blue-500">
+                            <input type="date" id="data" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-slate-400 mb-1">Local de Pesca</label>
-                            <input type="text" id="local" placeholder="Ex: Praia da Tocha" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 focus:outline-none focus:border-blue-500">
+                            <input type="text" id="local" placeholder="Ex: Praia de Quiaios" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-slate-400 mb-1">Fase da Lua</label>
-                            <select id="lua" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 focus:outline-none focus:border-blue-500">
+                            <select id="lua" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100">
                                 <option value="Nova">🌑 Lua Nova</option>
                                 <option value="Crescente">🌓 Quarto Crescente</option>
                                 <option value="Cheia">🌕 Lua Cheia</option>
@@ -59,356 +82,175 @@
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 bg-slate-900/40 p-4 rounded-lg border border-slate-700/60">
-                        <div>
-                            <label class="block text-sm font-medium text-slate-400 mb-1">⏱️ Hora de Início</label>
-                            <input type="time" id="hora-inicio" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 focus:outline-none focus:border-blue-500">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-slate-400 mb-1">⏱️ Hora de Fim</label>
-                            <input type="time" id="hora-fim" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 focus:outline-none focus:border-blue-500">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-slate-400 mb-1">🔢 Total de Capturas</label>
-                            <input type="number" id="total-capturas" min="0" placeholder="Ex: 3" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 focus:outline-none focus:border-blue-500">
-                        </div>
-                    </div>
-
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-sm font-medium text-slate-400 mb-1">Tipo de Maré</label>
-                            <select id="mare-tipo" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 focus:outline-none focus:border-blue-500">
+                            <select id="mare-tipo" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100">
                                 <option value="Enchente">🌊 Enchente</option>
                                 <option value="Vaza">📉 Vaza</option>
-                                <option value="Preamar">🔝 Preamar (Cheia)</option>
-                                <option value="Baixa-mar">🛑 Baixa-mar (Vazia)</option>
+                                <option value="Preamar">🔝 Preamar</option>
+                                <option value="Baixa-mar">🛑 Baixa-mar</option>
                             </select>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-slate-400 mb-1">Altura da Maré (m)</label>
-                            <input type="number" id="mare-altura" step="0.1" placeholder="Ex: 2.8" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 focus:outline-none focus:border-blue-500">
+                            <label class="block text-sm font-medium text-slate-400 mb-1">🔢 Total Capturas</label>
+                            <input type="number" id="total-capturas" min="0" placeholder="Ex: 2" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100">
                         </div>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-medium text-slate-400 mb-1">Tamanho das Ondas (m)</label>
-                            <input type="number" id="ondas" step="0.1" placeholder="Ex: 1.2" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 focus:outline-none focus:border-blue-500">
+                            <label class="block text-sm font-medium text-slate-400 mb-1">Iscos Utilizados</label>
+                            <input type="text" id="iscos" placeholder="Ex: Minhoca da lama" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-slate-400 mb-1">Vento (Direção/Força)</label>
-                            <input type="text" id="vento" placeholder="Ex: Norte 15 km/h" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 focus:outline-none focus:border-blue-500">
+                            <label class="block text-sm font-medium text-slate-400 mb-1">Especificação das Peças</label>
+                            <input type="text" id="peixes" placeholder="Ex: 1 Baila (40cm)" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100">
                         </div>
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-slate-400 mb-1">Iscos Utilizados (separados por vírgula)</label>
-                        <input type="text" id="iscos" placeholder="Ex: Casulo, Ganso" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 focus:outline-none focus:border-blue-500">
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-slate-400 mb-1">Especificação das Peças</label>
-                        <textarea id="peixes" rows="2" placeholder="Ex: 2 Robalos (35cm) ou escrever 'Grade'" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 focus:outline-none focus:border-blue-500"></textarea>
                     </div>
 
                     <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 rounded-lg transition shadow-lg flex items-center justify-center gap-2 cursor-pointer">
-                        💾 Gravar Sessão de Pesca
+                        💾 Gravar na Minha Conta
                     </button>
                 </form>
             </section>
 
+            <!-- Histórico Coletivo (Mural Público de Pesca) -->
             <section class="bg-slate-800 border border-slate-700 rounded-xl p-6 shadow-xl">
-                <div class="flex items-center gap-2 mb-6 border-b border-slate-700 pb-3">
-                    <span class="text-lg">📋</span>
-                    <h2 class="text-xl font-semibold">Histórico de Saídas</h2>
-                </div>
-                <div id="historico-lista" class="space-y-4 max-h-[600px] overflow-y-auto pr-2">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-6 border-b border-slate-700 pb-3">
+                    <div class="flex items-center gap-2">
+                        <span class="text-lg">🌍</span>
+                        <h2 class="text-xl font-semibold">Mural de Pescas da Comunidade</h2>
                     </div>
+                    <span class="text-xs text-slate-500 bg-slate-900 px-2.5 py-1 rounded-full border border-slate-700">Mostrando registos públicos</span>
+                </div>
+                <div id="historico-lista" class="space-y-4 max-h-[600px] overflow-y-auto pr-2"></div>
             </section>
         </div>
 
+        <!-- COLUNA 3 -->
         <div class="space-y-8">
-            <section class="bg-slate-800 border border-slate-700 rounded-xl p-6 shadow-xl sticky top-24">
-                <div class="flex items-center gap-2 mb-6 border-b border-slate-700 pb-3">
-                    <span class="text-lg">📊</span>
-                    <h2 class="text-xl font-semibold">Análise de Rendimento</h2>
+            <!-- Bloco de Patrocínio -->
+            <div class="bg-gradient-to-br from-amber-950/40 to-slate-800 border border-amber-500/30 rounded-xl p-4 text-center shadow-lg">
+                <span class="text-[10px] text-amber-500/70 uppercase tracking-widest block mb-2 font-bold">- Loja de Pesca Parceira -</span>
+                <div class="bg-slate-950 py-4 px-3 rounded-lg border border-slate-700">
+                    <p class="text-xs font-bold text-slate-200">Anuncie Aqui a sua Loja</p>
+                    <p class="text-[11px] text-slate-400 mt-1">Alcance milhares de pescadores de Surfcasting todas as semanas.</p>
                 </div>
+            </div>
 
-                <div class="space-y-6">
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="bg-slate-900 p-4 rounded-lg border border-slate-700 text-center">
-                            <span class="text-xs text-slate-400 block mb-1 uppercase tracking-wider">Total Saídas</span>
-                            <span id="stat-total" class="text-3xl font-bold text-blue-400">0</span>
-                        </div>
-                        <div class="bg-slate-900 p-4 rounded-lg border border-slate-700 text-center">
-                            <span class="text-xs text-slate-400 block mb-1 uppercase tracking-wider">Taxa de Sucesso</span>
-                            <span id="stat-sucesso" class="text-3xl font-bold text-emerald-400">0%</span>
-                        </div>
+            <!-- Dashboard Global -->
+            <section class="bg-slate-800 border border-slate-700 rounded-xl p-6 shadow-xl">
+                <div class="flex items-center gap-2 mb-4 border-b border-slate-700 pb-3">
+                    <span class="text-lg">📊</span>
+                    <h2 class="text-sm font-bold uppercase tracking-wider text-slate-300">Estatísticas Gerais (Total)</h2>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-slate-900 p-3 rounded-lg border border-slate-700 text-center">
+                        <span class="text-[10px] text-slate-400 block mb-0.5 uppercase">Saídas Totais</span>
+                        <span id="stat-total" class="text-2xl font-bold text-blue-400">0</span>
                     </div>
-                    
-                    <div class="grid grid-cols-1 gap-4">
-                        <div class="bg-slate-900 p-4 rounded-lg border border-slate-700 text-center">
-                            <span class="text-xs text-slate-400 block mb-1 uppercase tracking-wider">Total de Peixes Capturados</span>
-                            <span id="stat-peixes-total" class="text-3xl font-bold text-cyan-400">0</span>
-                        </div>
-                    </div>
-
-                    <div class="space-y-4">
-                        <h3 class="text-sm font-semibold text-slate-300 uppercase tracking-wider">Padrões de Sucesso</h3>
-                        <div class="bg-slate-900 p-4 rounded-lg border border-slate-700 space-y-3 text-sm">
-                            <div class="flex justify-between items-center">
-                                <span class="text-slate-400">Melhor Local:</span>
-                                <span id="best-local" class="font-medium text-slate-200">-</span>
-                            </div>
-                            <div class="flex justify-between items-center">
-                                <span class="text-slate-400">Melhor Lua:</span>
-                                <span id="best-lua" class="font-medium text-slate-200">-</span>
-                            </div>
-                            <div class="flex justify-between items-center">
-                                <span class="text-slate-400">Melhor Maré:</span>
-                                <span id="best-mare" class="font-medium text-slate-200">-</span>
-                            </div>
-                            <div class="flex justify-between items-center">
-                                <span class="text-slate-400">Isco Mais Eficaz:</span>
-                                <span id="best-isco" class="font-medium text-slate-200">-</span>
-                            </div>
-                        </div>
+                    <div class="bg-slate-900 p-3 rounded-lg border border-slate-700 text-center">
+                        <span class="text-[10px] text-slate-400 block mb-0.5 uppercase">Peixes Registados</span>
+                        <span id="stat-peixes-total" class="text-2xl font-bold text-cyan-400">0</span>
                     </div>
                 </div>
             </section>
         </div>
     </main>
 
-    <footer class="max-w-7xl mx-auto px-4 py-8 text-center border-t border-slate-800 mt-12">
-        <p class="text-xs text-slate-600 mb-2">Problemas com dados corrompidos na cache do navegador?</p>
-        <button onclick="limparTudoEForcar()" type="button" class="bg-red-950/40 text-red-400 border border-red-900/60 hover:bg-red-900/40 px-3 py-1 rounded text-xs transition cursor-pointer">
-            ⚠️ Limpar Cache de Dados do Diário
-        </button>
-    </footer>
-
     <script>
-        const SENHA_ADMIN = "pesca123"; 
-        let isAdmin = false;
+        // Simulação do estado para o protótipo local
+        let utilizadorLogado = false;
         let pescas = [];
 
-        // 1. ESCOPO GLOBAL IMEDIATO: Função mapeada diretamente no clique do HTML
-        function toggleAdminMode() {
-            console.log("Botão clicado com sucesso!");
-            if (!isAdmin) {
-                const senhaIntroduzida = prompt("Introduz a palavra-passe para ativares o modo de edição (registo):");
-                if (senhaIntroduzida === SENHA_ADMIN) {
-                    isAdmin = true;
-                    alert("Acesso autorizado! O formulário de registo está ativo.");
-                } else if (senhaIntroduzida !== null) {
-                    alert("Palavra-passe incorreta.");
-                }
-            } else {
-                isAdmin = false;
-                alert("Modo de consulta reativado.");
-            }
+        function simularLogin() {
+            // No futuro, isto ligará ao Supabase/Firebase Auth
+            utilizadorLogado = true;
+            document.getElementById('zona-deslogado').classList.add('hidden');
+            document.getElementById('aviso-login').classList.add('hidden');
+            document.getElementById('zona-logado').classList.remove('hidden');
+            document.getElementById('seccao-formulario').classList.remove('hidden');
+            alert("Simulação: Login efetuado! Agora podes criar registos.");
             atualizarInterface();
         }
 
-        // Função de SOS caso o localStorage tenha dados incompatíveis com a estrutura
-        function limparTudoEForcar() {
-            if(confirm("Isto vai apagar as pescas guardadas localmente neste browser. Exporta um ficheiro JSON antes se quiseres salvaguardar. Continuar?")) {
-                localStorage.removeItem('surfcasting_logs');
-                window.location.reload();
-            }
+        function simularLogout() {
+            utilizadorLogado = false;
+            document.getElementById('zona-logado').classList.add('hidden');
+            document.getElementById('seccao-formulario').classList.add('hidden');
+            document.getElementById('zona-deslogado').classList.remove('hidden');
+            document.getElementById('aviso-login').classList.remove('hidden');
+            alert("Sessão terminada. Voltaste ao Modo de Consulta.");
+            atualizarInterface();
         }
 
-        // Carregamento Seguro de Dados
+        // Carregar dados locais apenas para o protótipo continuar funcional
         try {
-            const dadosLocais = localStorage.getItem('surfcasting_logs');
-            if (dadosLocais) {
-                pescas = JSON.parse(dadosLocais);
-                if (!Array.isArray(pescas)) pescas = [];
-            }
-        } catch (e) {
-            console.error("Falha ao ler localStorage:", e);
-            pescas = [];
-        }
+            const dadosLocais = localStorage.getItem('surfcasting_logs_comunidade');
+            if (dadosLocais) pescas = JSON.parse(dadosLocais);
+        } catch (e) { pescas = []; }
 
-        // Execuções do ciclo de vida da página
         document.addEventListener('DOMContentLoaded', () => {
             const campoData = document.getElementById('data');
-            if(campoData) {
-                campoData.value = new Date().toISOString().substring(0, 10);
-            }
-            
-            // Segunda camada de redundância para capturar o clique via ID
-            const btnToggle = document.getElementById('btn-admin-toggle');
-            if (btnToggle) {
-                btnToggle.addEventListener('click', (e) => {
-                    console.log("Clique detetado via EventListener");
-                });
-            }
-
+            if(campoData) campoData.value = new Date().toISOString().substring(0, 10);
             atualizarInterface();
         });
 
         function guardarPesca(e) {
             e.preventDefault();
-            if (!isAdmin) return alert("Erro: Ative o Modo Edição primeiro.");
+            if (!utilizadorLogado) return alert("Precisas de fazer login primeiro.");
 
             const novaPesca = {
                 id: Date.now(),
-                data: document.getElementById('data').value || new Date().toISOString().substring(0, 10),
-                local: document.getElementById('local').value || 'Não especificado',
-                lua: document.getElementById('lua').value || 'Nova',
-                horaInicio: document.getElementById('hora-inicio').value || 'N/A',
-                horaFim: document.getElementById('hora-fim').value || 'N/A',
+                autor: "Pescador_Pro", // Em produção, virá do e-mail do login
+                data: document.getElementById('data').value,
+                local: document.getElementById('local').value,
+                lua: document.getElementById('lua').value,
+                mareTipo: document.getElementById('mare-tipo').value,
                 totalCapturas: parseInt(document.getElementById('total-capturas').value) || 0,
-                mareTipo: document.getElementById('mare-tipo').value || 'Enchente',
-                mareAltura: document.getElementById('mare-altura').value || 'N/A',
-                ondas: document.getElementById('ondas').value || 'N/A',
-                vento: document.getElementById('vento').value || 'N/A',
-                iscos: document.getElementById('iscos').value || 'N/A',
-                peixes: document.getElementById('peixes').value || 'N/A'
+                iscos: document.getElementById('iscos').value,
+                peixes: document.getElementById('peixes').value
             };
 
             pescas.unshift(novaPesca);
-            localStorage.setItem('surfcasting_logs', JSON.stringify(pescas));
-            
+            localStorage.setItem('surfcasting_logs_comunidade', JSON.stringify(pescas));
             document.getElementById('form-pesca').reset();
-            if(document.getElementById('data')) {
-                document.getElementById('data').value = new Date().toISOString().substring(0, 10);
-            }
-            
             atualizarInterface();
         }
 
-        function eliminarPesca(id) {
-            if (!isAdmin) return alert("Erro protegido.");
-            if (confirm("Remover este registo de saída?")) {
-                pescas = pescas.filter(p => p.id !== id);
-                localStorage.setItem('surfcasting_logs', JSON.stringify(pescas));
-                atualizarInterface();
-            }
-        }
-
         function atualizarInterface() {
-            try {
-                const seccaoForm = document.getElementById('seccao-formulario');
-                const btnToggle = document.getElementById('btn-admin-toggle');
-                const txtLock = document.getElementById('txt-lock');
-                
-                if (seccaoForm && btnToggle && txtLock) {
-                    if (isAdmin) {
-                        seccaoForm.classList.remove('hidden');
-                        btnToggle.className = "flex items-center gap-2 bg-amber-600 hover:bg-amber-500 px-4 py-2 rounded-lg text-sm font-medium transition text-white cursor-pointer select-none";
-                        txtLock.innerText = "🔓 Modo Edição (Admin)";
-                    } else {
-                        seccaoForm.classList.add('hidden');
-                        btnToggle.className = "flex items-center gap-2 bg-slate-700 hover:bg-slate-600 px-4 py-2 rounded-lg text-sm font-medium transition text-amber-400 cursor-pointer select-none";
-                        txtLock.innerText = "🔒 Modo Consulta";
-                    }
-                }
-
-                renderHistorico();
-                calcularMetricas();
-            } catch (err) {
-                console.error("Erro na interface:", err);
-            }
+            renderHistorico();
+            
+            // Atualizar métricas simples
+            if(document.getElementById('stat-total')) document.getElementById('stat-total').innerText = pescas.length;
+            let totalPeixes = 0;
+            pescas.forEach(p => totalPeixes += (p.totalCapturas || 0));
+            if(document.getElementById('stat-peixes-total')) document.getElementById('stat-peixes-total').innerText = totalPeixes;
         }
 
         function renderHistorico() {
             const container = document.getElementById('historico-lista');
             if (!container) return;
 
-            if (!pescas || pescas.length === 0) {
-                container.innerHTML = `<p class="text-slate-500 text-center py-8 text-sm">Ainda não há saídas registadas no diário.</p>`;
+            if (pescas.length === 0) {
+                container.innerHTML = `<p class="text-slate-500 text-center py-8 text-sm">Nenhum registo público na comunidade.</p>`;
                 return;
             }
 
-            container.innerHTML = pescas.map(p => {
-                if (!p) return '';
-                const totalPeixes = p.totalCapturas !== undefined ? p.totalCapturas : 0;
-                const textoPeixes = p.peixes ? String(p.peixes) : '';
-                const isGrade = totalPeixes === 0 || textoPeixes.toLowerCase().includes('grade');
-                
-                const botaoEliminar = isAdmin ? `
-                    <button onclick="eliminarPesca(${p.id})" class="absolute top-4 right-4 text-slate-500 hover:text-red-400 transition cursor-pointer">🗑️</button>
-                ` : '';
-
-                return `
-                    <div class="bg-slate-900 border ${isGrade ? 'border-amber-900/40 bg-amber-950/10' : 'border-slate-700'} p-4 rounded-lg relative group transition hover:border-slate-600">
-                        ${botaoEliminar}
-                        <div class="flex flex-wrap items-center gap-x-4 gap-y-1.5 mb-2 text-xs font-semibold text-slate-400">
-                            <span class="text-blue-400 font-bold">📅 ${formatarData(p.data || '')}</span>
-                            <span class="text-emerald-400 font-bold bg-slate-800/80 px-2 py-0.5 rounded border border-slate-700">📍 ${p.local || 'Não especificado'}</span>
-                            <span class="bg-slate-800 px-2 py-0.5 rounded border border-slate-700 text-slate-300">⏱️ ${p.horaInicio || 'N/A'} às ${p.horaFim || 'N/A'}</span>
-                        </div>
-                        <div class="flex flex-wrap gap-2 text-xs mb-3 text-slate-300">
-                            <span class="bg-slate-800/50 px-2 py-1 rounded border border-slate-700/40">${p.lua || 'Nova'}</span>
-                            <span class="bg-slate-800/50 px-2 py-1 rounded border border-slate-700/40">${p.mareTipo || 'Enchente'} (${p.mareAltura || 'N/A'}m)</span>
-                            <span class="bg-slate-800/50 px-2 py-1 rounded border border-slate-700/40">Mar: ${p.ondas || 'N/A'}m</span>
-                            <span class="bg-slate-800/50 px-2 py-1 rounded border border-slate-700/40">Vento: ${p.vento || 'N/A'}</span>
-                        </div>
-                        <div class="text-xs my-2 py-2 border-t border-slate-800/60">
-                            <span class="text-slate-500 block mb-0.5">Iscos:</span> 
-                            <span class="text-cyan-300 font-medium">${p.iscos || 'N/A'}</span>
-                        </div>
-                        <div class="mt-2 pt-2 border-t border-slate-800/40 flex justify-between items-start gap-4">
-                            <div class="text-sm flex-1">
-                                <span class="text-xs text-slate-500 block">Detalhe das Peças:</span>
-                                <p class="${isGrade ? 'text-amber-400/80 italic' : 'text-emerald-400 font-medium'}">${textoPeixes || 'Grade'}</p>
-                            </div>
-                            <div class="text-right whitespace-nowrap">
-                                <span class="inline-block px-2.5 py-0.5 rounded-full text-xs font-bold ${isGrade ? 'bg-amber-950/60 text-amber-400 border border-amber-800/60' : 'bg-emerald-950/60 text-emerald-400 border border-emerald-800/60'}">${totalPeixes} peixes</span>
-                            </div>
-                        </div>
+            container.innerHTML = pescas.map(p => `
+                <div class="bg-slate-900 border border-slate-700 p-4 rounded-lg relative">
+                    <div class="flex flex-wrap items-center justify-between gap-2 mb-2 border-b border-slate-800 pb-2 text-xs">
+                        <span class="text-blue-400 font-bold">📅 ${p.data}</span>
+                        <span class="text-slate-500">Por: <strong class="text-slate-300">@${p.autor || 'Anon'}</strong></span>
                     </div>
-                `;
-            }).join('');
-        }
-
-        function formatarData(dataStr) {
-            if(!dataStr) return 'N/A';
-            const partes = dataStr.split('-');
-            if(partes.length !== 3) return dataStr;
-            return `${partes[2]}/${partes[1]}/${partes[0]}`;
-        }
-
-        function calcularMetricas() {
-            try {
-                const total = pescas.length;
-                if (document.getElementById('stat-total')) document.getElementById('stat-total').innerText = total;
-
-                let totalPeixesGlobal = 0;
-                pescas.forEach(p => { if(p) totalPeixesGlobal += (parseInt(p.totalCapturas) || 0); });
-                if (document.getElementById('stat-peixes-total')) document.getElementById('stat-peixes-total').innerText = totalPeixesGlobal;
-
-                if (total === 0) {
-                    if (document.getElementById('stat-sucesso')) document.getElementById('stat-sucesso').innerText = '0%';
-                    return;
-                }
-                const saídasComSucesso = pescas.filter(p => p && (parseInt(p.totalCapturas) || 0) > 0);
-                if (document.getElementById('stat-sucesso')) document.getElementById('stat-sucesso').innerText = `${Math.round((saídasComSucesso.length / total) * 100)}%`;
-            } catch (err) {}
-        }
-
-        function exportarDados() {
-            if (!pescas || pescas.length === 0) return alert("Não existem dados.");
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(pescas, null, 2));
-            const a = document.createElement('a');
-            a.setAttribute("href", dataStr);
-            a.setAttribute("download", `surfcasting_${new Date().toISOString().substring(0,10)}.json`);
-            a.click();
-        }
-
-        function exportarCSV() {
-            if (!pescas || pescas.length === 0) return alert("Não existem dados.");
-            let csv = "data:text/csv;charset=utf-8,\uFEFFData;Local;Hora Inicio;Hora Fim;Total Capturas;Fase da Lua;Tipo de Mare;Altura Mare (m);Ondas (m);Vento;Iscos;Peixes Pescados\n";
-            pescas.forEach(p => {
-                if(!p) return;
-                csv += `${formatarData(p.data)};"${p.local}";${p.horaInicio};${p.horaFim};${p.totalCapturas};${p.lua};${p.mareTipo};${p.mareAltura};${p.ondas};"${p.vento}";"${p.iscos}";"${p.peixes}"\n`;
-            });
-            const encodedUri = encodeURI(csv);
-            const a = document.createElement('a');
-            a.setAttribute("href", encodedUri);
-            a.setAttribute("download", `relatorio_pesca.csv`);
-            a.click();
+                    <div class="grid grid-cols-2 gap-2 text-xs text-slate-300 mb-2">
+                        <div>📍 <span class="text-slate-400">Local:</span> ${p.local}</div>
+                        <div>🌊 <span class="text-slate-400">Maré:</span> ${p.mareTipo}</div>
+                    </div>
+                    <p class="text-xs text-slate-400">🐟 Capturas: <strong class="text-emerald-400">${p.peixes}</strong> (${p.totalCapturas} peixes)</p>
+                </div>
+            `).join('');
         }
     </script>
 </body>

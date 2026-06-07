@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Surfcasting Club Pro - Full Metrics BI V16</title>
+    <title>Surfcasting Club Pro - Fixed Premium V16.1</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -106,7 +106,6 @@
         </section>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            
             <div class="lg:col-span-2 space-y-8">
                 <section class="bg-slate-800 border border-slate-700 rounded-xl p-6 shadow-xl">
                     <div class="flex justify-between items-center mb-6 border-b border-slate-700 pb-3">
@@ -115,7 +114,6 @@
                     </div>
                     
                     <form id="form-pesca" onsubmit="guardarPesca(event)" class="space-y-6">
-                        
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div>
                                 <label class="block text-slate-500 text-[10px] uppercase mb-1 font-bold tracking-wider">📅 Data</label>
@@ -123,7 +121,7 @@
                             </div>
                             <div>
                                 <label class="block text-slate-500 text-[10px] uppercase mb-1 font-bold tracking-wider">📍 Local</label>
-                                <input type="text" id="local" placeholder="Ex: Praia da Vagueira" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 focus:ring-1 focus:ring-blue-500 outline-none">
+                                <input type="text" id="local" placeholder="Ex: Praia de Troia" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 focus:ring-1 focus:ring-blue-500 outline-none">
                             </div>
                             <div>
                                 <label class="block text-slate-500 text-[10px] uppercase mb-1 font-bold tracking-wider">🌙 Lua</label>
@@ -140,167 +138,4 @@
                             </div>
                             <div>
                                 <label class="block text-slate-500 text-[10px] uppercase mb-1 font-bold tracking-wider">⏱️ Hora Fim</label>
-                                <input type="time" id="hora-fim" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 outline-none">
-                            </div>
-                            <div>
-                                <label class="block text-slate-500 text-[10px] uppercase mb-1 font-bold tracking-wider">🌊 Maré</label>
-                                <select id="mare-tipo" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 outline-none">
-                                    <option value="Enchente">Enchente</option>
-                                    <option value="Vaza">Vaza</option>
-                                    <option value="Preamar">Preamar (Cheia)</option>
-                                    <option value="Baixa-mar">Baixa-mar (Vazia)</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div id="container-campos-premium" class="relative border border-blue-500/20 rounded-xl bg-slate-900/40 overflow-hidden">
-                            
-                            <div id="form-lock-overlay" class="absolute inset-0 z-10 lock-overlay backdrop-blur-[2px] flex flex-col items-center justify-center text-center p-4">
-                                <span class="bg-amber-500 text-slate-950 text-[10px] font-black px-2 py-0.5 rounded mb-2 uppercase">Premium Pro</span>
-                                <p class="text-slate-300 text-[11px] font-bold">Desbloqueia os relatórios avançados de BI</p>
-                            </div>
-
-                            <div id="form-premium-content" class="p-5 space-y-6 premium-blur">
-                                <h3 class="text-blue-400 font-bold uppercase text-[11px] tracking-widest border-b border-slate-800 pb-2 flex items-center gap-2">
-                                    <span>📊</span> Parâmetros Avançados para Relatórios (Métricas PRO)
-                                </h3>
-
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div class="space-y-3">
-                                        <p class="text-[10px] text-slate-500 font-bold uppercase">🌡️ Clima</p>
-                                        <div class="grid grid-cols-2 gap-2">
-                                            <div class="col-span-2">
-                                                <select id="vento-dir" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1.5 text-xs">
-                                                    <option value="">Direção do Vento</option>
-                                                    <option value="Norte">Norte (N)</option><option value="Noroeste">NW</option>
-                                                    <option value="Oeste">Oeste (W)</option><option value="Este">Este (E)</option>
-                                                    <option value="Sul">Sul (S)</option>
-                                                </select>
-                                            </div>
-                                            <input type="number" id="temp-ar" placeholder="Ar (ºC)" class="bg-slate-800 border border-slate-700 rounded px-2 py-1.5 text-xs">
-                                            <input type="number" id="pressao" placeholder="Pressão (hPa)" class="bg-slate-800 border border-slate-700 rounded px-2 py-1.5 text-xs">
-                                        </div>
-                                    </div>
-
-                                    <div class="space-y-3">
-                                        <p class="text-[10px] text-slate-500 font-bold uppercase">🌊 Mar</p>
-                                        <div class="grid grid-cols-2 gap-2">
-                                            <input type="number" id="temp-agua" placeholder="Água (ºC)" class="bg-slate-800 border border-slate-700 rounded px-2 py-1.5 text-xs">
-                                            <input type="number" id="periodo-vaga" placeholder="Vaga (s)" class="bg-slate-800 border border-slate-700 rounded px-2 py-1.5 text-xs">
-                                            <select id="agua-estado" class="col-span-2 w-full bg-slate-800 border border-slate-700 rounded px-2 py-1.5 text-xs">
-                                                <option value="">Claridade da Água</option>
-                                                <option value="Cristalina">Cristalina</option><option value="Aberta">Aberta/Normal</option>
-                                                <option value="Chocada">Chocada/Barrenta</option><option value="Alada">Alada (Algas)</option>
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <div class="space-y-3">
-                                        <p class="text-[10px] text-slate-500 font-bold uppercase">🎣 Técnica</p>
-                                        <div class="space-y-2">
-                                            <input type="text" id="distancia-lan" placeholder="Distância Lançamento (m)" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1.5 text-xs">
-                                            <input type="text" id="chumbada" placeholder="Tipo/Peso Chumbada" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1.5 text-xs">
-                                            <input type="text" id="montagem" placeholder="Montagem utilizada" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1.5 text-xs">
-                                        </div>
-                                    </div>
-
-                                    <div class="space-y-3">
-                                        <p class="text-[10px] text-slate-500 font-bold uppercase">🐟 Captura Avançada</p>
-                                        <div class="space-y-2">
-                                            <input type="number" id="peso-total" step="0.1" placeholder="Peso Cesta (Kg)" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1.5 text-xs">
-                                            <input type="text" id="tamanho-anzol" placeholder="Tamanho do anzol" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1.5 text-xs">
-                                            <input type="text" id="hora-capturas" placeholder="Hora exata capturas (Picos)" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1.5 text-xs">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                            <div class="md:col-span-1">
-                                <label class="block text-slate-500 text-[10px] uppercase mb-1 font-bold">N.º Peixes</label>
-                                <input type="number" id="total-capturas" min="0" placeholder="0 = Grade" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs">
-                            </div>
-                            <div class="md:col-span-3">
-                                <label class="block text-slate-500 text-[10px] uppercase mb-1 font-bold">🦐 Iscos e Espécies</label>
-                                <input type="text" id="iscos-e-peixes" placeholder="Ex: Casulo | 2 Robalos, 1 Sargo" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs">
-                            </div>
-                        </div>
-
-                        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-black py-3.5 rounded-lg transition shadow-lg text-xs uppercase tracking-widest cursor-pointer">
-                            💾 Guardar Diário de Bordo
-                        </button>
-                    </form>
-                </section>
-
-                <section class="bg-slate-800 border border-slate-700 rounded-xl p-6 shadow-xl">
-                    <h2 class="text-base font-bold mb-4 border-b border-slate-700 pb-2 flex items-center gap-2"><span>📖</span> Histórico Completo</h2>
-                    <div id="historico-lista" class="space-y-3 max-h-[500px] overflow-y-auto pr-2"></div>
-                </section>
-            </div>
-
-            <div class="space-y-6">
-                <section class="bg-slate-800 border border-slate-700 rounded-xl p-5 text-center shadow-md">
-                    <p class="text-xs text-slate-300 font-bold mb-2 uppercase tracking-tighter">💡 Sabias que...</p>
-                    <p class="text-[11px] text-slate-400 leading-relaxed italic">O motor de BI Premium ignora automaticamente registos vazios ou "grades" para que os teus gráficos reflitam apenas as condições de sucesso real.</p>
-                </section>
-
-                <section class="bg-slate-800 border border-slate-700 rounded-xl p-5 text-center shadow-md">
-                    <p class="text-xs text-slate-400 mb-3 italic">Gostas desta ferramenta?</p>
-                    <a href="https://www.paypal.com" target="_blank" class="inline-flex items-center justify-center w-full bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-bold text-xs py-2.5 rounded-lg transition hover:scale-[1.02]">
-                        ☕ Pagar um Isco / Café
-                    </a>
-                </section>
-            </div>
-        </div>
-    </main>
-
-    <script>
-        let utilizadorLogado = false;
-        
-        let pescas = [
-            { id: 1, data: "2026-06-05", local: "Caparica", mare: "Enchente", pressao: 1018, totalPeixes: 3, isco: "Casulo", peixes: "3 Robalos" },
-            { id: 2, data: "2026-06-03", local: "Peniche", mare: "Vaza", pressao: 1012, totalPeixes: 5, isco: "Sarda", peixes: "5 Sargos" },
-            { id: 3, data: "2026-05-28", local: "Costa Nova", mare: "Enchente", pressao: 1015, totalPeixes: 0, isco: "Coreano", peixes: "Grade" }
-        ];
-
-        let chartInstance1 = null, chartInstance2 = null, chartInstance3 = null;
-
-        function simularLogin() {
-            utilizadorLogado = true;
-            document.getElementById('zona-deslogado').classList.add('hidden');
-            document.getElementById('zona-logado').classList.remove('hidden');
-            document.getElementById('lock-screen-bi').classList.add('hidden');
-            document.getElementById('container-graficos-bi').classList.remove('premium-blur');
-            document.getElementById('form-lock-overlay').classList.add('hidden');
-            document.getElementById('form-premium-content').classList.remove('premium-blur');
-            document.getElementById('badge-form-mode').innerText = "Modo PREMIUM Ativo";
-            document.getElementById('badge-form-mode').className = "text-[10px] bg-emerald-950 text-emerald-400 px-2 py-0.5 rounded font-mono border border-emerald-500/30";
-            inicializarOuAtualizarBI();
-        }
-
-        function simularLogout() {
-            utilizadorLogado = false;
-            document.getElementById('zona-logado').classList.add('hidden');
-            document.getElementById('zona-deslogado').classList.remove('hidden');
-            document.getElementById('lock-screen-bi').classList.remove('hidden');
-            document.getElementById('container-graficos-bi').classList.add('premium-blur');
-            document.getElementById('form-lock-overlay').classList.remove('hidden');
-            document.getElementById('form-premium-content').classList.add('premium-blur');
-            document.getElementById('badge-form-mode').innerText = "Modo Gratuito";
-            document.getElementById('badge-form-mode').className = "text-[10px] bg-slate-700 text-slate-300 px-2 py-0.5 rounded font-mono";
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            if(document.getElementById('data')) document.getElementById('data').value = new Date().toISOString().substring(0, 10);
-            atualizarContadoresGratuitos();
-            renderHistorico();
-            inicializarOuAtualizarBI();
-        });
-
-        function guardarPesca(e) {
-            e.preventDefault();
-
-            const novaPesca = {
-                id: Date.now(),
-                data:
+                                <input type="time" id="hora-fim" class="w-full bg-slate-900 border border-

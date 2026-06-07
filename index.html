@@ -3,9 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Surfcasting Club Pro - BI Dashboard V14</title>
+    <title>Surfcasting Club Pro - Freemium BI V15</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .premium-blur {
+            filter: blur(4px);
+            pointer-events: none;
+            user-select: none;
+        }
+    </style>
 </head>
 <body class="bg-slate-900 text-slate-100 min-h-screen font-sans text-sm">
 
@@ -18,18 +25,19 @@
             
             <div class="flex flex-wrap items-center gap-3">
                 <div id="zona-deslogado" class="flex items-center gap-2">
-                    <button onclick="simularLogin()" type="button" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg font-medium transition shadow cursor-pointer">
-                        🔑 Entrar / Modo Premium Demo
+                    <span class="text-xs bg-slate-700 px-2 py-1 rounded text-slate-300 font-mono">Conta Gratuita</span>
+                    <button onclick="simularLogin()" type="button" class="bg-amber-500 hover:bg-amber-400 text-slate-950 px-4 py-2 rounded-lg font-bold transition shadow cursor-pointer">
+                        ⭐ Experimentar Premium (BI)
                     </button>
                 </div>
                 
                 <div id="zona-logado" class="hidden flex items-center gap-3 bg-slate-950/60 pl-3 pr-2 py-1 rounded-lg border border-slate-700">
                     <div class="text-left">
                         <p class="text-xs font-bold text-slate-200">Pescador_Pro</p>
-                        <p class="text-[10px] text-emerald-400 font-mono">Painel BI Ativo</p>
+                        <p class="text-[10px] text-emerald-400 font-mono">Plano Premium Ativo</p>
                     </div>
                     <button onclick="simularLogout()" type="button" class="bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-red-400 p-1.5 rounded transition text-xs cursor-pointer">
-                        Sair 👋
+                        Voltar a Grátis 🔄
                     </button>
                 </div>
             </div>
@@ -38,43 +46,67 @@
 
     <main class="max-w-7xl mx-auto px-4 py-8 space-y-8">
         
-        <div id="aviso-login" class="bg-gradient-to-r from-blue-950/60 to-slate-800 border border-blue-500/30 p-6 rounded-xl flex flex-col md:flex-row justify-between items-center gap-4 shadow-lg">
-            <div class="space-y-1">
-                <h2 class="text-lg font-bold text-blue-400">📊 Módulo de Analítica Avançada (Business Intelligence)</h2>
-                <p class="text-slate-400 text-xs">Ativa a simulação Premium para ver como o sistema processa cruzamentos de vento, pressão e marés em gráficos interativos e limpos de ruído.</p>
-            </div>
-            <button onclick="simularLogin()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-6 py-2.5 rounded-lg transition whitespace-nowrap shadow cursor-pointer">
-                Ver Painel BI Premium
-            </button>
-        </div>
-
-        <section id="painel-bi" class="hidden space-y-6">
-            <div class="flex items-center gap-2 border-b border-slate-700 pb-3">
-                <span class="p-2 bg-blue-500/10 text-blue-400 rounded-lg font-bold">PRO BI</span>
+        <section class="bg-slate-800 border border-slate-700 rounded-xl p-6 shadow-xl">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4 border-b border-slate-700 pb-3">
                 <div>
-                    <h2 class="text-xl font-bold tracking-tight">Dashboard Analítico de Padrões</h2>
-                    <p class="text-xs text-slate-500">Métricas consolidadas com supressão automática de registos inválidos ou vazios.</p>
+                    <h2 class="text-base font-bold text-slate-200 flex items-center gap-2">📈 O Meu Sumário de Pesca</h2>
+                    <p class="text-xs text-slate-400">Estatísticas básicas da tua conta.</p>
+                </div>
+                <span class="text-[10px] text-emerald-400 bg-emerald-950/50 border border-emerald-500/30 px-2 py-0.5 rounded uppercase tracking-wider font-mono">Funcionalidade Gratuita</span>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="bg-slate-900 p-4 rounded-lg border border-slate-700 text-center">
+                    <span class="text-[10px] text-slate-500 block uppercase font-bold">Total Saídas</span>
+                    <span id="stat-total" class="text-3xl font-black text-blue-400">4</span>
+                </div>
+                <div class="bg-slate-900 p-4 rounded-lg border border-slate-700 text-center">
+                    <span class="text-[10px] text-slate-500 block uppercase font-bold">Total Peixes</span>
+                    <span id="stat-peixes-total" class="text-3xl font-black text-emerald-400">11</span>
+                </div>
+                <div class="bg-slate-900 p-4 rounded-lg border border-slate-700 text-center">
+                    <span class="text-[10px] text-slate-500 block uppercase font-bold">Média Peixe/Saída</span>
+                    <span id="stat-media" class="text-3xl font-black text-cyan-400">2.8</span>
+                </div>
+                <div class="bg-slate-900 p-4 rounded-lg border border-slate-700 text-center">
+                    <span class="text-[10px] text-slate-500 block uppercase font-bold">Taxa de Grade</span>
+                    <span id="stat-grade" class="text-3xl font-black text-amber-500">25%</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="bg-slate-800 border border-slate-700 rounded-xl p-6 shadow-xl relative overflow-hidden">
+            
+            <div id="lock-screen-bi" class="absolute inset-0 bg-slate-850/40 z-20 flex flex-col items-center justify-center p-6 text-center backdrop-blur-[2px]">
+                <div class="bg-slate-950/90 border border-amber-500/40 p-6 rounded-xl max-w-md shadow-2xl space-y-4">
+                    <span class="text-3xl block">📊</span>
+                    <h3 class="text-base font-bold text-amber-400 uppercase tracking-wide">Desbloquear Engenharia de Dados BI</h3>
+                    <p class="text-xs text-slate-300 leading-relaxed">Descobre os padrões ocultos das tuas capturas. Cruza automaticamente marés, curvas barométricas e a eficácia de cada isco sem ruído ou campos vazios.</p>
+                    <button onclick="simularLogin()" class="w-full bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-black py-2.5 rounded-lg text-xs uppercase tracking-wider hover:opacity-90 transition shadow-lg cursor-pointer">
+                        Ativar Conta Premium Pro
+                    </button>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="bg-slate-800 border border-slate-700 rounded-xl p-4 shadow-md">
-                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">🌊 Produtividade por Tipo de Maré</h3>
-                    <div class="h-48 relative flex items-center justify-center">
-                        <canvas id="chartMare"></canvas>
-                    </div>
+            <div class="flex items-center gap-2 border-b border-slate-700 pb-3 mb-6">
+                <span class="p-1.5 bg-blue-500/10 text-blue-400 rounded font-bold text-xs">PRO BI</span>
+                <div>
+                    <h2 class="text-base font-bold tracking-tight">Análise Preditiva de Padrões (Business Intelligence)</h2>
+                    <p class="text-xs text-slate-500">Cruzamentos estatísticos avançados com higienização automática de dados inválidos.</p>
                 </div>
-                <div class="bg-slate-800 border border-slate-700 rounded-xl p-4 shadow-md">
-                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">🎈 Tendência de Capturas vs Pressão (hPa)</h3>
-                    <div class="h-48 relative flex items-center justify-center">
-                        <canvas id="chartPressao"></canvas>
-                    </div>
+            </div>
+
+            <div id="container-graficos-bi" class="grid grid-cols-1 md:grid-cols-3 gap-6 premium-blur">
+                <div class="bg-slate-900 border border-slate-700/60 rounded-xl p-4">
+                    <h3 class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-4">🌊 Produtividade por Tipo de Maré</h3>
+                    <div class="h-44 relative flex items-center justify-center"><canvas id="chartMare"></canvas></div>
                 </div>
-                <div class="bg-slate-800 border border-slate-700 rounded-xl p-4 shadow-md">
-                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">🦐 Funil de Eficiência de Isco</h3>
-                    <div class="h-48 relative flex items-center justify-center">
-                        <canvas id="chartIscos"></canvas>
-                    </div>
+                <div class="bg-slate-900 border border-slate-700/60 rounded-xl p-4">
+                    <h3 class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-4">🎈 Capturas vs Pressão Atmosférica</h3>
+                    <div class="h-44 relative flex items-center justify-center"><canvas id="chartPressao"></canvas></div>
+                </div>
+                <div class="bg-slate-900 border border-slate-700/60 rounded-xl p-4">
+                    <h3 class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-4">🦐 Funil de Eficiência de Isco</h3>
+                    <div class="h-44 relative flex items-center justify-center"><canvas id="chartIscos"></canvas></div>
                 </div>
             </div>
         </section>
@@ -82,45 +114,25 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             
             <div class="lg:col-span-2 space-y-8">
-                <section id="seccao-formulario" class="bg-slate-800 border border-slate-700 rounded-xl p-6 shadow-xl hidden">
-                    <div class="flex items-center gap-2 mb-6 border-b border-slate-700 pb-3 text-blue-400">
-                        <span>➕</span>
-                        <h2 class="text-xl font-semibold">Novo Registo de Saída</h2>
+                <section class="bg-slate-800 border border-slate-700 rounded-xl p-6 shadow-xl">
+                    <div class="flex justify-between items-center mb-6 border-b border-slate-700 pb-3">
+                        <h2 class="text-base font-bold flex items-center gap-2 text-blue-400"><span>➕</span> Novo Registo de Saída</h2>
+                        <span id="badge-form-mode" class="text-[10px] bg-slate-700 text-slate-300 px-2 py-0.5 rounded font-mono">Modo Gratuito</span>
                     </div>
                     
                     <form id="form-pesca" onsubmit="guardarPesca(event)" class="space-y-6">
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div>
-                                <label class="block text-slate-400 mb-1">📅 Data</label>
-                                <input type="date" id="data" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100">
+                                <label class="block text-slate-400 mb-1 text-xs">📅 Data *</label>
+                                <input type="date" id="data" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 text-xs">
                             </div>
                             <div>
-                                <label class="block text-slate-400 mb-1">📍 Local</label>
-                                <input type="text" id="local" placeholder="Praia de Troia" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100">
+                                <label class="block text-slate-400 mb-1 text-xs">📍 Local *</label>
+                                <input type="text" id="local" placeholder="Ex: Costa da Caparica" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 text-xs">
                             </div>
                             <div>
-                                <label class="block text-slate-400 mb-1">🌙 Lua</label>
-                                <select id="lua" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100">
-                                    <option value="Cheia">🌕 Lua Cheia</option>
-                                    <option value="Nova">🌑 Lua Nova</option>
-                                    <option value="Crescente">🌓 Quarto Crescente</option>
-                                    <option value="Minguante">🌗 Quarto Minguante</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 bg-slate-900/30 p-3 rounded-lg border border-slate-700/50">
-                            <div>
-                                <label class="block text-slate-400 mb-1">⏱️ Início</label>
-                                <input type="time" id="hora-inicio" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100">
-                            </div>
-                            <div>
-                                <label class="block text-slate-400 mb-1">⏱️ Fim</label>
-                                <input type="time" id="hora-fim" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100">
-                            </div>
-                            <div>
-                                <label class="block text-slate-400 mb-1">🌊 Tipo Maré</label>
-                                <select id="mare-tipo" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100">
+                                <label class="block text-slate-400 mb-1 text-xs">🌊 Tipo Maré *</label>
+                                <select id="mare-tipo" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 text-xs">
                                     <option value="Enchente">Enchente</option>
                                     <option value="Vaza">Vaza</option>
                                     <option value="Preamar">Preamar</option>
@@ -129,59 +141,55 @@
                             </div>
                         </div>
 
-                        <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-700/60 grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <h4 class="text-xs font-bold uppercase tracking-wider text-blue-400 mb-2">🎈 Clima & Mar</h4>
-                                <div class="space-y-2">
-                                    <input type="number" id="pressao" placeholder="Pressão Atmosférica (Ex: 1018)" class="w-full bg-slate-800 border border-slate-700 rounded px-2.5 py-1.5 text-xs">
-                                    <select id="vento-dir" class="w-full bg-slate-800 border border-slate-700 rounded px-2.5 py-1.5 text-xs text-slate-300">
-                                        <option value="Norte">Norte (N)</option>
-                                        <option value="Oeste">Oeste (W)</option>
-                                        <option value="Este">Este (E)</option>
-                                        <option value="Sul">Sul (S)</option>
+                        <div id="container-campos-premium" class="opacity-50 pointer-events-none border-2 border-dashed border-slate-700 p-4 rounded-xl space-y-4 bg-slate-900/20 relative">
+                            <div id="badge-lock-campos" class="absolute top-2 right-2 bg-amber-500/20 border border-amber-500/40 text-amber-400 text-[9px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">🔒 Bloqueado (Módulos BI)</div>
+                            <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400">Métricas Avançadas para Motores de BI</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div>
+                                    <label class="block text-slate-500 text-[11px] mb-1">🎈 Pressão Barométrica (hPa)</label>
+                                    <input type="number" id="pressao" placeholder="Ex: 1014" class="w-full bg-slate-800 border border-slate-700 rounded p-2 text-xs">
+                                </div>
+                                <div>
+                                    <label class="block text-slate-500 text-[11px] mb-1">💨 Direção do Vento</label>
+                                    <select id="vento-dir" class="w-full bg-slate-800 border border-slate-700 rounded p-2 text-xs text-slate-400">
+                                        <option value="Norte">Norte (N)</option><option value="Oeste">Oeste (W)</option>
+                                        <option value="Este">Este (E)</option><option value="Sul">Sul (S)</option>
                                     </select>
                                 </div>
-                            </div>
-                            <div>
-                                <h4 class="text-xs font-bold uppercase tracking-wider text-amber-400 mb-2">🐟 Capturas Avançadas</h4>
-                                <div class="space-y-2">
-                                    <input type="number" id="total-capturas" min="0" placeholder="N.º Total de Peixes" required class="w-full bg-slate-800 border border-slate-700 rounded px-2.5 py-1.5 text-xs">
-                                    <input type="text" id="iscos" placeholder="Isco Principal (Ex: Casulo)" required class="w-full bg-slate-800 border border-slate-700 rounded px-2.5 py-1.5 text-xs">
+                                <div>
+                                    <label class="block text-slate-500 text-[11px] mb-1">🦐 Isco Principal</label>
+                                    <input type="text" id="iscos" placeholder="Ex: Casulo" class="w-full bg-slate-800 border border-slate-700 rounded p-2 text-xs">
                                 </div>
                             </div>
                         </div>
 
-                        <div>
-                            <label class="block text-slate-400 mb-1 text-xs">📋 Discriminação do Balde</label>
-                            <input type="text" id="peixes" placeholder="Ex: 2 Douradas (1.5kg total), 1 Robalo" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2">
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                            <div class="md:col-span-1">
+                                <label class="block text-slate-400 mb-1 text-xs">🔢 Total Peixes *</label>
+                                <input type="number" id="total-capturas" min="0" placeholder="0 = Grade" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs">
+                            </div>
+                            <div class="md:col-span-3">
+                                <label class="block text-slate-400 mb-1 text-xs">📋 O que capturaste? *</label>
+                                <input type="text" id="peixes" placeholder="Ex: 2 Sargos, 1 Baila (Ou escreve 'Grade')" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs">
+                            </div>
                         </div>
 
-                        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-lg transition shadow cursor-pointer">
-                            💾 Gravar e Atualizar Painel BI
+                        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-lg transition shadow cursor-pointer text-xs uppercase tracking-wider">
+                            💾 Guardar no Diário de Bordo
                         </button>
                     </form>
                 </section>
 
                 <section class="bg-slate-800 border border-slate-700 rounded-xl p-6 shadow-xl">
-                    <h2 class="text-lg font-semibold mb-4 border-b border-slate-700 pb-2">🌍 Histórico de Saídas Recentes</h2>
-                    <div id="historico-lista" class="space-y-4 max-h-[500px] overflow-y-auto pr-2"></div>
+                    <h2 class="text-base font-bold mb-4 border-b border-slate-700 pb-2 flex items-center gap-2"><span>📖</span> O Meu Diário (Histórico Completo)</h2>
+                    <div id="historico-lista" class="space-y-3 max-h-[400px] overflow-y-auto pr-2"></div>
                 </section>
             </div>
 
             <div class="space-y-6">
-                <section class="bg-slate-800 border border-slate-700 rounded-xl p-4 text-center">
-                    <span class="text-[10px] text-amber-500 block uppercase font-bold tracking-widest mb-1">Afiliado Recomendado</span>
-                    <div class="bg-slate-900 p-3 rounded border border-slate-700 text-xs">
-                        <p class="font-bold text-slate-200">Carreto Shimano Ultegra XTE</p>
-                        <p class="text-slate-500 text-[11px] mt-1">O parceiro ideal para lançamentos de longa distância.</p>
-                    </div>
-                </section>
-
                 <section class="bg-slate-800 border border-slate-700 rounded-xl p-5 text-center shadow-md">
-                    <p class="text-xs text-slate-400 mb-3">Gostas do nosso motor estatístico?</p>
-                    <a href="https://www.paypal.com" target="_blank" class="inline-flex items-center justify-center w-full bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-bold text-xs py-2.5 rounded-lg transition">
-                        ☕ Paga-me um Isco / Comprar Café
-                    </a>
+                    <p class="text-xs text-slate-300 font-bold mb-2">💡 Dica do Pescador</p>
+                    <p class="text-[11px] text-slate-400 leading-relaxed">Manter o diário atualizado permite-te consultar as tuas saídas passadas a qualquer momento no telemóvel.</p>
                 </section>
             </div>
         </div>
@@ -190,63 +198,74 @@
     <script>
         let utilizadorLogado = false;
         
-        // Dados estáticos de teste simulados para o motor de BI arrancar com inteligência e sem lixo
+        // Base de dados inicial (Gratuita e Premium misturada no LocalStorage/Memória)
         let pescas = [
-            { id: 1, data: "2026-06-01", local: "Praia da Tocha", mare: "Enchente", pressao: 1016, totalPeixes: 4, iscos: "Casulo", peixes: "4 Sargos (1.8kg total)", horaInicio: "05:00", horaFim: "09:00", ventoDir: "Norte" },
-            { id: 2, data: "2026-05-28", local: "Nazaré", mare: "Preamar", pressao: 1020, totalPeixes: 2, iscos: "Ganso", peixes: "2 Robalos", horaInicio: "21:00", horaFim: "01:00", ventoDir: "Oeste" },
-            { id: 3, data: "2026-05-15", local: "Peniche", mare: "Enchente", pressao: 1012, totalPeixes: 5, iscos: "Casulo", peixes: "5 Douradas", horaInicio: "06:00", horaFim: "11:00", ventoDir: "Este" },
-            { id: 4, data: "2026-05-10", local: "Praia do Meco", mare: "Vaza", pressao: null, totalPeixes: 0, iscos: "Coreano", peixes: "Grade", horaInicio: "14:00", horaFim: "18:00", ventoDir: "Norte" }
+            { id: 1, data: "2026-06-05", local: "Praia de Quiaios", mare: "Enchente", pressao: 1016, totalPeixes: 4, iscos: "Casulo", peixes: "4 Sargos", ventoDir: "Norte" },
+            { id: 2, data: "2026-06-01", local: "Setúbal", mare: "Preamar", pressao: 1020, totalPeixes: 2, iscos: "Ganso", peixes: "2 Douradas", ventoDir: "Oeste" },
+            { id: 3, data: "2026-05-20", local: "Nazaré", mare: "Enchente", pressao: 1012, totalPeixes: 5, iscos: "Casulo", peixes: "5 Sargos de quilo", ventoDir: "Este" },
+            { id: 4, data: "2026-05-10", local: "Praia da Tocha", mare: "Vaza", pressao: null, totalPeixes: 0, iscos: null, peixes: "Grade total", ventoDir: "Norte" }
         ];
 
-        // Instâncias Globais dos Gráficos do Chart.js
-        let chartInstance1 = null;
-        let chartInstance2 = null;
-        let chartInstance3 = null;
+        let chartInstance1 = null, chartInstance2 = null, chartInstance3 = null;
 
         function simularLogin() {
             utilizadorLogado = true;
+            // UI Header
             document.getElementById('zona-deslogado').classList.add('hidden');
-            document.getElementById('aviso-login').classList.add('hidden');
             document.getElementById('zona-logado').classList.remove('hidden');
-            document.getElementById('seccao-formulario').classList.remove('hidden');
-            document.getElementById('painel-bi').classList.remove('hidden');
+            // UI Painel BI Lock
+            document.getElementById('lock-screen-bi').classList.add('hidden');
+            document.getElementById('container-graficos-bi').classList.remove('premium-blur');
+            // UI Form Premium Fields
+            document.getElementById('badge-form-mode').innerText = "Modo PREMIUM Ativo";
+            document.getElementById('badge-form-mode').className = "text-[10px] bg-emerald-950 text-emerald-400 px-2 py-0.5 rounded font-mono border border-emerald-500/30";
+            document.getElementById('container-campos-premium').classList.remove('opacity-50', 'pointer-events-none');
+            document.getElementById('badge-lock-campos').classList.add('hidden');
+            
             inicializarOuAtualizarBI();
-            renderHistorico();
         }
 
         function simularLogout() {
             utilizadorLogado = false;
+            // UI Header
             document.getElementById('zona-logado').classList.add('hidden');
-            document.getElementById('seccao-formulario').classList.add('hidden');
-            document.getElementById('painel-bi').classList.add('hidden');
             document.getElementById('zona-deslogado').classList.remove('hidden');
-            document.getElementById('aviso-login').classList.remove('hidden');
+            // UI Painel BI Lock
+            document.getElementById('lock-screen-bi').classList.remove('hidden');
+            document.getElementById('container-graficos-bi').classList.add('premium-blur');
+            // UI Form Premium Fields
+            document.getElementById('badge-form-mode').innerText = "Modo Gratuito";
+            document.getElementById('badge-form-mode').className = "text-[10px] bg-slate-700 text-slate-300 px-2 py-0.5 rounded font-mono";
+            document.getElementById('container-campos-premium').classList.add('opacity-50', 'pointer-events-none');
+            document.getElementById('badge-lock-campos').classList.remove('hidden');
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            const campoData = document.getElementById('data');
-            if(campoData) campoData.value = new Date().toISOString().substring(0, 10);
+            if(document.getElementById('data')) document.getElementById('data').value = new Date().toISOString().substring(0, 10);
+            atualizarContadoresGratuitos();
             renderHistorico();
+            
+            // Render inicial de fundo (mesmo borrado, o utilizador vê que os gráficos são REAIS)
+            inicializarOuAtualizarBI();
         });
 
         function guardarPesca(e) {
             e.preventDefault();
-            if (!utilizadorLogado) return;
 
-            const pPressao = document.getElementById('pressao').value;
-            
+            // Se for gratuito, estes campos não são capturados/ficam nulos
+            const pPressao = utilizadorLogado ? document.getElementById('pressao').value : null;
+            const pVento = utilizadorLogado ? document.getElementById('vento-dir').value : null;
+            const pIscos = utilizadorLogado ? document.getElementById('iscos').value : null;
+
             const novaPesca = {
                 id: Date.now(),
                 data: document.getElementById('data').value,
                 local: document.getElementById('local').value,
-                lua: document.getElementById('lua').value,
-                horaInicio: document.getElementById('hora-inicio').value || '--:--',
-                horaFim: document.getElementById('hora-fim').value || '--:--',
                 mare: document.getElementById('mare-tipo').value,
-                pressao: pPressao ? parseInt(pPressao) : null, // Guarda NULL explicitamente se estiver vazio
-                ventoDir: document.getElementById('vento-dir').value,
+                pressao: pPressao ? parseInt(pPressao) : null,
+                ventoDir: pVento,
+                iscos: pIscos,
                 totalPeixes: parseInt(document.getElementById('total-capturas').value) || 0,
-                iscos: document.getElementById('iscos').value,
                 peixes: document.getElementById('peixes').value
             };
 
@@ -254,91 +273,85 @@
             document.getElementById('form-pesca').reset();
             if(document.getElementById('data')) document.getElementById('data').value = new Date().toISOString().substring(0, 10);
             
-            inicializarOuAtualizarBI();
+            atualizarContadoresGratuitos();
             renderHistorico();
+            inicializarOuAtualizarBI();
         }
 
-        // MOTOR DE PROCESSAMENTO E MÓDULO DE BUSINESS INTELLIGENCE
-        function inicializarOuAtualizarBI() {
-            
-            // --- ESTRATÉGIA DATA CLEANING (LIMPAGEM DE RUÍDO BI) ---
-            // 1. Gráfico de Marés: Agrupar somatório de peixes capturados por tipo
-            let dadosMare = { "Enchente": 0, "Vaza": 0, "Preamar": 0, "Baixa-mar": 0 };
+        // 📈 LOGICA DAS METRICAS GRATUITAS (SUMÁRIO DE PESCA)
+        function atualizarContadoresGratuitos() {
+            const totalSaidas = pescas.length;
+            document.getElementById('stat-total').innerText = totalSaidas;
+
+            let totalPeixes = 0;
+            let totalGrades = 0;
             pescas.forEach(p => {
-                if(p.mare && dadosMare[p.mare] !== undefined) {
-                    dadosMare[p.mare] += p.totalPeixes;
-                }
+                totalPeixes += p.totalPeixes;
+                if(p.totalPeixes === 0) totalGrades++;
             });
 
-            // 2. Gráfico Barométrico: FILTRAR ELEMENTOS NULOS (Remover lixo de campos vazios)
-            let logsComPressaoValida = pescas.filter(p => p.pressao !== null && p.pressao > 0);
-            // Ordenar por pressão de forma crescente para a linha do gráfico fazer sentido analítico
-            logsComPressaoValida.sort((a, b) => a.pressao - b.pressao);
+            document.getElementById('stat-peixes-total').innerText = totalPeixes;
             
+            const media = totalSaidas > 0 ? (totalPeixes / totalSaidas).toFixed(1) : 0;
+            document.getElementById('stat-media').innerText = media;
+
+            const txGrade = totalSaidas > 0 ? Math.round((totalGrades / totalSaidas) * 100) : 0;
+            document.getElementById('stat-grade').innerText = txGrade + "%";
+        }
+
+        // 📊 RELATÓRIOS AVANÇADOS DE BI (CHART.JS)
+        function inicializarOuAtualizarBI() {
+            // 1. Processamento Marés
+            let dadosMare = { "Enchente": 0, "Vaza": 0, "Preamar": 0, "Baixa-mar": 0 };
+            pescas.forEach(p => { if(p.mare && dadosMare[p.mare] !== undefined) dadosMare[p.mare] += p.totalPeixes; });
+
+            // 2. Processamento Pressão (Filtro Anti-Lixo)
+            let logsComPressaoValida = pescas.filter(p => p.pressao !== null && p.pressao > 0);
+            logsComPressaoValida.sort((a, b) => a.pressao - b.pressao);
             let labelsPressao = logsComPressaoValida.map(p => p.pressao + " hPa");
             let valoresPressaoPeixes = logsComPressaoValida.map(p => p.totalPeixes);
 
-            // 3. Gráfico de Iscos: Contagem inteligente de peixes capturados por tipo de isco
+            // 3. Processamento Iscos
             let dadosIscos = {};
             pescas.forEach(p => {
-                if (p.iscos && p.totalPeixes > 0) { // Ignora iscos que resultaram em grade para limpar o donut
+                if (p.iscos && p.totalPeixes > 0) {
                     let iscoFormatado = p.iscos.trim();
                     dadosIscos[iscoFormatado] = (dadosIscos[iscoFormatado] || 0) + p.totalPeixes;
                 }
             });
 
-            // --- PROCESSAMENTO VISUAL (CHART.JS CONFIG) ---
-            // Destruir gráficos antigos se já existirem para prevenir sobreposição de frames na renderização dinâmica
             if(chartInstance1) chartInstance1.destroy();
             if(chartInstance2) chartInstance2.destroy();
             if(chartInstance3) chartInstance3.destroy();
 
-            // Gráfico 1: Barras - Marés
             const ctx1 = document.getElementById('chartMare').getContext('2d');
             chartInstance1 = new Chart(ctx1, {
                 type: 'bar',
                 data: {
                     labels: Object.keys(dadosMare),
-                    datasets: [{
-                        label: 'Peixes Capturados',
-                        data: Object.values(dadosMare),
-                        backgroundColor: '#3b82f6',
-                        borderRadius: 6
-                    }]
+                    datasets: [{ data: Object.values(dadosMare), backgroundColor: '#3b82f6', borderRadius: 4 }]
                 },
                 options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
             });
 
-            // Gráfico 2: Linha - Pressão (Sem lixo nem quebras a zero)
             const ctx2 = document.getElementById('chartPressao').getContext('2d');
             chartInstance2 = new Chart(ctx2, {
                 type: 'line',
                 data: {
                     labels: labelsPressao.length > 0 ? labelsPressao : ["Sem Dados"],
-                    datasets: [{
-                        label: 'Eficácia (Nº Peixes)',
-                        data: valoresPressaoPeixes.length > 0 ? valoresPressaoPeixes : [0],
-                        borderColor: '#22d3ee',
-                        backgroundColor: 'rgba(34, 211, 238, 0.1)',
-                        tension: 0.3,
-                        fill: true
-                    }]
+                    datasets: [{ data: valoresPressaoPeixes.length > 0 ? valoresPressaoPeixes : [0], borderColor: '#22d3ee', backgroundColor: 'rgba(34, 211, 238, 0.05)', tension: 0.2, fill: true }]
                 },
                 options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
             });
 
-            // Gráfico 3: Donut - Iscos Premiados
             const ctx3 = document.getElementById('chartIscos').getContext('2d');
             chartInstance3 = new Chart(ctx3, {
                 type: 'doughnut',
                 data: {
-                    labels: Object.keys(dadosIscos).length > 0 ? Object.keys(dadosIscos) : ["Nenhum Peixe"],
-                    datasets: [{
-                        data: Object.keys(dadosIscos).length > 0 ? Object.values(dadosIscos) : [1],
-                        backgroundColor: ['#f59e0b', '#10b981', '#ec4899', '#6366f1']
-                    }]
+                    labels: Object.keys(dadosIscos).length > 0 ? Object.keys(dadosIscos) : ["Sem Dados Pro"],
+                    datasets: [{ data: Object.keys(dadosIscos).length > 0 ? Object.values(dadosIscos) : [1], backgroundColor: ['#f59e0b', '#10b981', '#ec4899'] }]
                 },
-                options: { responsive: true, maintainAspectRatio: false }
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
             });
         }
 
@@ -347,16 +360,19 @@
             if(!container) return;
             
             container.innerHTML = pescas.map(p => `
-                <div class="bg-slate-900 border border-slate-700 rounded-lg p-3 text-xs space-y-2">
-                    <div class="flex justify-between text-slate-400 border-b border-slate-800 pb-1">
-                        <span class="font-bold text-blue-400">📅 ${p.data}</span>
-                        <span>📍 ${p.local} | Maré: <strong>${p.mare}</strong></span>
+                <div class="bg-slate-900 border border-slate-700/70 rounded-lg p-3 text-xs flex justify-between items-center gap-4">
+                    <div class="space-y-1">
+                        <div class="flex items-center gap-2 text-slate-400">
+                            <span class="font-bold text-blue-400">📅 ${p.data}</span>
+                            <span>•</span>
+                            <span class="text-slate-200 font-medium">📍 ${p.local}</span>
+                        </div>
+                        <p class="text-slate-400 text-[11px]">Maré: <span class="text-slate-200">${p.mare}</span> ${p.iscos ? `| Isco: <span class="text-amber-400">${p.iscos}</span>` : ''}</p>
+                        <p class="text-emerald-400 font-semibold">${p.peixes}</p>
                     </div>
-                    <div class="flex justify-between items-center">
-                        <p class="text-slate-300">Isco: <span class="text-slate-100 font-medium">${p.iscos}</span> → <span class="text-emerald-400">${p.peixes}</span></p>
-                        <span class="bg-slate-850 px-2 py-0.5 rounded border border-slate-700 text-slate-400 font-mono text-[10px]">
-                            ${p.pressao ? p.pressao + ' hPa' : '🎈 Sem Barómetro'}
-                        </span>
+                    <div class="text-right">
+                        <span class="block text-[10px] text-slate-500 font-mono">${p.pressao ? p.pressao + ' hPa' : '⚡ Registo Simples'}</span>
+                        <span class="inline-block mt-1 bg-slate-800 border border-slate-700 px-2 py-0.5 rounded font-bold text-slate-300">${p.totalPeixes} pçs</span>
                     </div>
                 </div>
             `).join('');

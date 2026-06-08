@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Surfcasting Club Pro - Native DOM Premium V16.4</title>
+    <title>Surfcasting Club Pro - Conditional BI Engine V16.5</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -64,36 +64,7 @@
             </div>
         </section>
 
-        <section id="wrapper-bi" class="bg-slate-800 border border-slate-700 rounded-xl p-6 shadow-xl relative overflow-hidden">
-            <div id="lock-screen-bi" class="absolute inset-0 z-20 flex flex-col items-center justify-center p-6 text-center bg-slate-950/80 backdrop-blur-[3px]">
-                <div class="bg-slate-900 border border-amber-500/40 p-6 rounded-xl max-w-sm shadow-2xl space-y-4">
-                    <div class="w-12 h-12 bg-amber-500/20 text-amber-500 rounded-full flex items-center justify-center mx-auto text-xl">🔒</div>
-                    <h3 class="text-base font-bold text-amber-400 uppercase tracking-wide">Relatórios BI Premium</h3>
-                    <p class="text-xs text-slate-400">Visualiza cruzamentos de Pressão, Maré e Iscos de forma profissional.</p>
-                    <button onclick="simularLogin()" class="w-full bg-amber-500 text-slate-950 font-black py-2 rounded-lg text-xs uppercase tracking-wider hover:bg-amber-400 transition cursor-pointer">Desbloquear Agora</button>
-                </div>
-            </div>
-
-            <div class="flex items-center gap-2 border-b border-slate-700 pb-3 mb-6">
-                <span class="p-1.5 bg-blue-500/10 text-blue-400 rounded font-bold text-xs uppercase">BI Engine</span>
-                <h2 class="text-base font-bold">Análise Analítica de Padrões</h2>
-            </div>
-
-            <div id="container-graficos-bi" class="grid grid-cols-1 md:grid-cols-3 gap-6 blur-sm pointer-events-none select-none">
-                <div class="bg-slate-900 border border-slate-700/60 rounded-xl p-4 h-56 flex flex-col">
-                    <h3 class="text-[10px] font-bold text-slate-500 uppercase mb-4 tracking-widest">Produtividade / Maré</h3>
-                    <div class="flex-1 relative"><canvas id="chartMare"></canvas></div>
-                </div>
-                <div class="bg-slate-900 border border-slate-700/60 rounded-xl p-4 h-56 flex flex-col">
-                    <h3 class="text-[10px] font-bold text-slate-500 uppercase mb-4 tracking-widest">Capturas / Pressão</h3>
-                    <div class="flex-1 relative"><canvas id="chartPressao"></canvas></div>
-                </div>
-                <div class="bg-slate-900 border border-slate-700/60 rounded-xl p-4 h-56 flex flex-col">
-                    <h3 class="text-[10px] font-bold text-slate-500 uppercase mb-4 tracking-widest">Eficácia de Isco</h3>
-                    <div class="flex-1 relative"><canvas id="chartIscos"></canvas></div>
-                </div>
-            </div>
-        </section>
+        <div id="zona-bi-premium"></div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div class="lg:col-span-2 space-y-8">
@@ -141,13 +112,12 @@
                             </div>
                         </div>
 
-                        <div id="container-campos-premium" class="relative border border-blue-500/20 rounded-xl bg-slate-900/40 min-h-[120px]">
-                            <div id="form-lock-overlay" class="absolute inset-0 z-10 bg-slate-950/80 backdrop-blur-[3px] flex flex-col items-center justify-center text-center p-4">
-                                <span class="bg-amber-500 text-slate-950 text-[10px] font-black px-2 py-0.5 rounded mb-2 uppercase">Premium Pro</span>
-                                <p class="text-slate-300 text-[11px] font-bold">Desbloqueia parâmetros avançados para relatórios BI</p>
+                        <div id="container-campos-premium" class="relative border border-blue-500/20 rounded-xl bg-slate-900/40 min-h-[60px]">
+                            <div id="form-lock-overlay" class="absolute inset-0 z-10 bg-slate-950/85 flex flex-col items-center justify-center text-center p-4">
+                                <p class="text-slate-400 text-xs">⭐ Parâmetros Avançados (Disponíveis apenas em Modo Premium)</p>
                             </div>
 
-                            <div id="form-premium-content" class="p-5 space-y-6 blur-sm pointer-events-none select-none">
+                            <div id="form-premium-content" class="p-5 space-y-6 hidden">
                                 <h3 class="text-blue-400 font-bold uppercase text-[11px] tracking-widest border-b border-slate-800 pb-2 flex items-center gap-2">
                                     <span>📊</span> Parâmetros Avançados para Relatórios (Métricas PRO)
                                 </h3>
@@ -229,7 +199,7 @@
             <div class="space-y-6">
                 <section class="bg-slate-800 border border-slate-700 rounded-xl p-5 text-center shadow-md">
                     <p class="text-xs text-slate-300 font-bold mb-2 uppercase tracking-tighter">💡 Sabias que...</p>
-                    <p class="text-[11px] text-slate-400 leading-relaxed italic">O motor de BI Premium limpa automaticamente registos incompletos para que as análises de padrões fiquem perfeitas.</p>
+                    <p class="text-[11px] text-slate-400 leading-relaxed italic">O motor de BI analisa os padrões de maré e pressão atmosférica cruzando os teus dados de capturas com precisão cirúrgica.</p>
                 </section>
                 <section class="bg-slate-800 border border-slate-700 rounded-xl p-5 text-center shadow-md">
                     <a href="https://www.paypal.com" target="_blank" class="inline-flex items-center justify-center w-full bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-bold text-xs py-2.5 rounded-lg transition hover:scale-[1.02]">
@@ -243,22 +213,29 @@
     <script>
         let utilizadorLogado = false;
         
-        // Strings HTML guardadas em memória para re-injeção perfeita do estado trancado
-        const backupCortinaBI = `
-            <div id="lock-screen-bi" class="absolute inset-0 z-20 flex flex-col items-center justify-center p-6 text-center bg-slate-950/80 backdrop-blur-[3px]">
-                <div class="bg-slate-900 border border-amber-500/40 p-6 rounded-xl max-w-sm shadow-2xl space-y-4">
-                    <div class="w-12 h-12 bg-amber-500/20 text-amber-500 rounded-full flex items-center justify-center mx-auto text-xl">🔒</div>
-                    <h3 class="text-base font-bold text-amber-400 uppercase tracking-wide">Relatórios BI Premium</h3>
-                    <p class="text-xs text-slate-400">Visualiza cruzamentos de Pressão, Maré e Iscos de forma profissional.</p>
-                    <button onclick="simularLogin()" class="w-full bg-amber-500 text-slate-950 font-black py-2 rounded-lg text-xs uppercase tracking-wider hover:bg-amber-400 transition cursor-pointer">Desbloquear Agora</button>
+        // Estrutura pura da secção BI em string HTML para ser injetada de forma limpa apenas no Premium
+        const templateBIHTML = `
+            <section class="bg-slate-800 border border-slate-700 rounded-xl p-6 shadow-xl">
+                <div class="flex items-center gap-2 border-b border-slate-700 pb-3 mb-6">
+                    <span class="p-1.5 bg-blue-500/10 text-blue-400 rounded font-bold text-xs uppercase">BI Engine Ativo</span>
+                    <h2 class="text-base font-bold">Análise Analítica de Padrões Pro</h2>
                 </div>
-            </div>`;
-
-        const backupCortinaForm = `
-            <div id="form-lock-overlay" class="absolute inset-0 z-10 bg-slate-950/80 backdrop-blur-[3px] flex flex-col items-center justify-center text-center p-4">
-                <span class="bg-amber-500 text-slate-950 text-[10px] font-black px-2 py-0.5 rounded mb-2 uppercase">Premium Pro</span>
-                <p class="text-slate-300 text-[11px] font-bold">Desbloqueia parâmetros avançados para relatórios BI</p>
-            </div>`;
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-slate-900 border border-slate-700/60 rounded-xl p-4 h-56 flex flex-col">
+                        <h3 class="text-[10px] font-bold text-slate-500 uppercase mb-4 tracking-widest">Produtividade / Maré</h3>
+                        <div class="flex-1 relative"><canvas id="chartMare"></canvas></div>
+                    </div>
+                    <div class="bg-slate-900 border border-slate-700/60 rounded-xl p-4 h-56 flex flex-col">
+                        <h3 class="text-[10px] font-bold text-slate-500 uppercase mb-4 tracking-widest">Capturas / Pressão</h3>
+                        <div class="flex-1 relative"><canvas id="chartPressao"></canvas></div>
+                    </div>
+                    <div class="bg-slate-900 border border-slate-700/60 rounded-xl p-4 h-56 flex flex-col">
+                        <h3 class="text-[10px] font-bold text-slate-500 uppercase mb-4 tracking-widest">Eficácia de Isco</h3>
+                        <div class="flex-1 relative"><canvas id="chartIscos"></canvas></div>
+                    </div>
+                </div>
+            </section>
+        `;
 
         let pescas = [
             { id: 1, data: "2026-06-05", local: "Setúbal", mare: "Enchente", pressao: 1018, totalPeixes: 3, isco: "Casulo", peixes: "3 Douradas" },
@@ -268,41 +245,43 @@
 
         let chartInstance1 = null, chartInstance2 = null, chartInstance3 = null;
 
-        // MANIPULAÇÃO RADICAL DO DOM NATIVO (Ignora mutações de classes CSS instáveis)
-        function aplicarEstadoUI() {
+        function gerirInterfaceEstado() {
             const zonaDeslogado = document.getElementById('zona-deslogado');
             const zonaLogado = document.getElementById('zona-logado');
-            const containerGraficosBi = document.getElementById('container-graficos-bi');
+            const zonaBiPremium = document.getElementById('zona-bi-premium');
+            const formLockOverlay = document.getElementById('form-lock-overlay');
             const formPremiumContent = document.getElementById('form-premium-content');
             const badgeFormMode = document.getElementById('badge-form-mode');
 
-            // Limpa elementos de bloqueio se já existirem para evitar duplicados
-            const cortinaBI = document.getElementById('lock-screen-bi');
-            if(cortinaBI) cortinaBI.remove();
-            const cortinaForm = document.getElementById('form-lock-overlay');
-            if(cortinaForm) cortinaForm.remove();
-
             if (utilizadorLogado) {
+                // Estado do Header
                 zonaDeslogado.classList.add('hidden');
                 zonaLogado.classList.remove('hidden');
                 
-                // Remove completamente os filtros de desfoque e trancas mecânicas
-                containerGraficosBi.className = "grid grid-cols-1 md:grid-cols-3 gap-6";
-                formPremiumContent.className = "p-5 space-y-6";
+                // Injeta fisicamente a secção de BI no ecrã
+                zonaBiPremium.innerHTML = templateBIHTML;
+                
+                // Abre os campos avançados do formulário
+                formLockOverlay.classList.add('hidden');
+                formPremiumContent.classList.remove('hidden');
                 
                 badgeFormMode.innerText = "Modo PREMIUM Ativo";
                 badgeFormMode.className = "text-[10px] bg-emerald-950 text-emerald-400 px-2 py-0.5 rounded font-mono border border-emerald-500/30";
+                
+                // Inicializa os gráficos agora que o DOM existe e está limpo
+                inicializarGraficosBI();
             } else {
+                // Estado do Header
                 zonaLogado.classList.add('hidden');
                 zonaDeslogado.classList.remove('hidden');
                 
-                // Devolve o desfoque ao contentor
-                containerGraficosBi.className = "grid grid-cols-1 md:grid-cols-3 gap-6 blur-sm pointer-events-none select-none";
-                formPremiumContent.className = "p-5 space-y-6 blur-sm pointer-events-none select-none";
+                // Destrói completamente a secção de BI do ecrã (Invisível/Inexistente na versão grátis)
+                zonaBiPremium.innerHTML = "";
+                destruirInstanciasGraficos();
                 
-                // Injeta as cortinas físicas de volta ao DOM
-                document.getElementById('wrapper-bi').insertAdjacentHTML('afterbegin', backupCortinaBI);
-                document.getElementById('container-campos-premium').insertAdjacentHTML('afterbegin', backupCortinaForm);
+                // Tranca os campos avançados do formulário
+                formPremiumContent.classList.add('hidden');
+                formLockOverlay.classList.remove('hidden');
                 
                 badgeFormMode.innerText = "Modo Gratuito";
                 badgeFormMode.className = "text-[10px] bg-slate-700 text-slate-300 px-2 py-0.5 rounded font-mono";
@@ -311,22 +290,19 @@
 
         function simularLogin() {
             utilizadorLogado = true;
-            aplicarEstadoUI();
-            inicializarOuAtualizarBI();
+            gerirInterfaceEstado();
         }
 
         function simularLogout() {
             utilizadorLogado = false;
-            aplicarEstadoUI();
-            inicializarOuAtualizarBI();
+            gerirInterfaceEstado();
         }
 
         document.addEventListener('DOMContentLoaded', () => {
             if(document.getElementById('data')) document.getElementById('data').value = new Date().toISOString().substring(0, 10);
             atualizarContadoresGratuitos();
             renderHistorico();
-            aplicarEstadoUI();
-            inicializarOuAtualizarBI();
+            gerirInterfaceEstado();
         });
 
         function guardarPesca(e) {
@@ -351,11 +327,9 @@
             document.getElementById('form-pesca').reset();
             if(document.getElementById('data')) document.getElementById('data').value = new Date().toISOString().substring(0, 10);
             
-            // Força a persistência visual do estado atual
-            aplicarEstadoUI();
+            gerirInterfaceEstado();
             atualizarContadoresGratuitos();
             renderHistorico();
-            inicializarOuAtualizarBI();
         }
 
         function atualizarContadoresGratuitos() {
@@ -368,7 +342,22 @@
             document.getElementById('stat-grade').innerText = total > 0 ? Math.round((grades/total)*100) + "%" : "0%";
         }
 
-        function inicializarOuAtualizarBI() {
+        function destruirInstanciasGraficos() {
+            if(chartInstance1) chartInstance1.destroy();
+            if(chartInstance2) chartInstance2.destroy();
+            if(chartInstance3) chartInstance3.destroy();
+            chartInstance1 = null; chartInstance2 = null; chartInstance3 = null;
+        }
+
+        function inicializarGraficosBI() {
+            destruirInstanciasGraficos();
+
+            // Elementos de contexto só vão existir se a string tiver sido injetada
+            const c1 = document.getElementById('chartMare');
+            const c2 = document.getElementById('chartPressao');
+            const c3 = document.getElementById('chartIscos');
+            if(!c1 || !c2 || !c3) return;
+
             let dadosMare = { "Enchente": 0, "Vaza": 0, "Preamar": 0, "Baixa-mar": 0 };
             pescas.forEach(p => { if(p.mare && dadosMare[p.mare] !== undefined) dadosMare[p.mare] += p.totalPeixes; });
 
@@ -381,33 +370,26 @@
                 }
             });
 
-            if(chartInstance1) chartInstance1.destroy();
-            if(chartInstance2) chartInstance2.destroy();
-            if(chartInstance3) chartInstance3.destroy();
-
-            const ctx1 = document.getElementById('chartMare').getContext('2d');
-            chartInstance1 = new Chart(ctx1, {
+            chartInstance1 = new Chart(c1.getContext('2d'), {
                 type: 'bar',
                 data: { labels: Object.keys(dadosMare), datasets: [{ data: Object.values(dadosMare), backgroundColor: '#3b82f6', borderRadius: 4 }] },
                 options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
             });
 
-            const ctx2 = document.getElementById('chartPressao').getContext('2d');
-            chartInstance2 = new Chart(ctx2, {
+            chartInstance2 = new Chart(c2.getContext('2d'), {
                 type: 'line',
                 data: { 
-                    labels: logsPressao.length > 0 ? logsPressao.map(p => p.pressao + "hPa") : ["Sem Dados"], 
-                    datasets: [{ data: logsPressao.length > 0 ? logsPressao.map(p => p.totalPeixes) : [0], borderColor: '#22d3ee', tension: 0.3, fill: false }] 
+                    labels: logsPressao.length > 0 ? logsPressao.map(p => p.pressao + "hPa") : ["1012hPa", "1015hPa", "1018hPa"], 
+                    datasets: [{ data: logsPressao.length > 0 ? logsPressao.map(p => p.totalPeixes) : [5, 0, 3], borderColor: '#22d3ee', tension: 0.3, fill: false }] 
                 },
                 options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
             });
 
-            const ctx3 = document.getElementById('chartIscos').getContext('2d');
-            chartInstance3 = new Chart(ctx3, {
+            chartInstance3 = new Chart(c3.getContext('2d'), {
                 type: 'doughnut',
                 data: { 
-                    labels: Object.keys(dadosIscos).length > 0 ? Object.keys(dadosIscos) : ["Casulo"], 
-                    datasets: [{ data: Object.keys(dadosIscos).length > 0 ? Object.values(dadosIscos) : [1], backgroundColor: ['#f59e0b', '#10b981', '#6366f1'] }] 
+                    labels: Object.keys(dadosIscos).length > 0 ? Object.keys(dadosIscos) : ["Casulo", "Ganso"], 
+                    datasets: [{ data: Object.keys(dadosIscos).length > 0 ? Object.values(dadosIscos) : [3, 5], backgroundColor: ['#f59e0b', '#10b981', '#6366f1'] }] 
                 },
                 options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
             });

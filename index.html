@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Surfcasting Club Pro - Architecture V17.3</title>
+    <title>Surfcasting Club Pro - Ultimate Resilience V17.4</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -19,7 +19,7 @@
             <div class="flex flex-wrap items-center gap-3">
                 <div id="zona-deslogado" class="flex items-center gap-2">
                     <span class="text-xs bg-slate-700 px-2 py-1 rounded text-slate-300 font-mono">Conta Gratuita</span>
-                    <button onclick="simularLogin()" type="button" class="bg-amber-500 hover:bg-amber-400 text-slate-950 px-4 py-2 rounded-lg font-bold transition shadow shadow-amber-500/10 cursor-pointer">
+                    <button onclick="simularLogin()" type="button" class="bg-amber-500 hover:bg-amber-400 text-slate-950 px-4 py-2 rounded-lg font-bold transition cursor-pointer">
                         ⭐ Ativar Modo Premium
                     </button>
                 </div>
@@ -130,44 +130,4 @@
 
                         <div id="container-campos-premium" class="relative border border-blue-500/20 rounded-xl bg-slate-900/40 min-h-[60px]">
                             <div id="form-lock-overlay" class="absolute inset-0 z-10 bg-slate-950/85 flex flex-col items-center justify-center text-center p-4 rounded-xl">
-                                <p class="text-slate-400 text-xs">⭐ Parâmetros Avançados (Disponíveis apenas em Modo Premium)</p>
-                            </div>
-
-                            <div id="form-premium-content" class="p-5 space-y-6 hidden">
-                                <h3 class="text-blue-400 font-bold uppercase text-[11px] tracking-widest border-b border-slate-800 pb-2 flex items-center gap-2">
-                                    <span>📊</span> Parâmetros Avançados para Relatórios (Métricas PRO)
-                                </h3>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div class="space-y-3">
-                                        <p class="text-[10px] text-slate-500 font-bold uppercase">🌡️ Clima</p>
-                                        <div class="grid grid-cols-2 gap-2">
-                                            <div class="col-span-2">
-                                                <select id="vento-dir" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1.5 text-xs text-slate-100">
-                                                    <option value="Norte">Norte (N)</option><option value="Noroeste">NW</option>
-                                                    <option value="Oeste">Oeste (W)</option><option value="Este">Este (E)</option>
-                                                    <option value="Sul">Sul (S)</option>
-                                                </select>
-                                            </div>
-                                            <input type="number" id="temp-ar" placeholder="Ar (ºC)" class="bg-slate-800 border border-slate-700 rounded px-2 py-1.5 text-xs text-slate-100">
-                                            <input type="number" id="pressao" placeholder="Pressão (hPa)" class="bg-slate-800 border border-slate-700 rounded px-2 py-1.5 text-xs text-slate-100">
-                                        </div>
-                                    </div>
-                                    <div class="space-y-3">
-                                        <p class="text-[10px] text-slate-500 font-bold uppercase">🌊 Mar</p>
-                                        <div class="grid grid-cols-2 gap-2">
-                                            <input type="number" id="temp-agua" placeholder="Água (ºC)" class="bg-slate-800 border border-slate-700 rounded px-2 py-1.5 text-xs text-slate-100">
-                                            <input type="number" id="periodo-vaga" placeholder="Vaga (s)" class="bg-slate-800 border border-slate-700 rounded px-2 py-1.5 text-xs text-slate-100">
-                                            <select id="agua-estado" class="col-span-2 w-full bg-slate-800 border border-slate-700 rounded px-2 py-1.5 text-xs text-slate-100">
-                                                <option value="Aberta">Aberta/Normal</option>
-                                                <option value="Cristalina">Cristalina</option>
-                                                <option value="Chocada">Chocada/Barrenta</option>
-                                                <option value="Alada">Alada (Algas)</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="space-y-3">
-                                        <p class="text-[10px] text-slate-500 font-bold uppercase">🎣 Técnica</p>
-                                        <div class="space-y-2">
-                                            <input type="text" id="distancia-lan" placeholder="Distância Lançamento (m)" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1.5 text-xs text-slate-100">
-                                            <input type="text" id="chumbada" placeholder="Tipo/Peso Chumbada" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1.5 text-xs text-slate-100">
-                                            <input type="text" id="montagem" placeholder="Montagem utilizada" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-
+                                <p class="text-slate-400 text-

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Surfcasting Club Pro - Fail-Safe Architecture V17.1</title>
+    <title>Surfcasting Club Pro - Architecture V17.2</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -79,4 +79,41 @@
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div>
                                 <label class="block text-slate-500 text-[10px] uppercase mb-1 font-bold tracking-wider">📅 Data</label>
-                                <input type="date"
+                                <input type="date" id="data" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 focus:ring-1 focus:ring-blue-500 outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-slate-500 text-[10px] uppercase mb-1 font-bold tracking-wider">📍 Local</label>
+                                <input type="text" id="local" placeholder="Ex: Praia de Troia" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 focus:ring-1 focus:ring-blue-500 outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-slate-500 text-[10px] uppercase mb-1 font-bold tracking-wider">🌙 Lua</label>
+                                <select id="lua" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 outline-none">
+                                    <option value="Nova">🌑 Lua Nova</option>
+                                    <option value="Crescente">🌓 Quarto Crescente</option>
+                                    <option value="Cheia">🌕 Lua Cheia</option>
+                                    <option value="Minguante">🌗 Quarto Minguante</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-slate-500 text-[10px] uppercase mb-1 font-bold tracking-wider">⏱️ Hora Início</label>
+                                <input type="time" id="hora-inicio" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-slate-500 text-[10px] uppercase mb-1 font-bold tracking-wider">⏱️ Hora Fim</label>
+                                <input type="time" id="hora-fim" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-slate-500 text-[10px] uppercase mb-1 font-bold tracking-wider">🌊 Maré</label>
+                                <select id="mare-tipo" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 outline-none">
+                                    <option value="Enchente">Enchente</option>
+                                    <option value="Vaza">Vaza</option>
+                                    <option value="Preamar">Preamar (Cheia)</option>
+                                    <option value="Baixa-mar">Baixa-mar (Vazia)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 border-t border-slate-700/40 pt-4">
+                            <div class="md:col-span-1">
+                                <label class="block text-slate-500 text-[10px] uppercase mb-1 font-bold">N.º Peixes</label>
+                                <input type="number" id="total-capturas" min="0" placeholder="0 = Grade" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px

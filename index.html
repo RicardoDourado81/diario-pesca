@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Surfcasting Club Pro - V20.0 Enterprise Stable</title>
+    <title>Surfcasting Club Pro - V20.1 Hotfix</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -261,7 +261,6 @@
         let chartInstance1 = null, chartInstance2 = null, chartInstance3 = null;
 
         function gerirInterfaceEstado() {
-            // Isolamento de UI: Contadores e Tabela correm de forma 100% independente do motor gráfico
             try {
                 renderizarTabela();
                 atualizarContadoresGratuitos();
@@ -288,7 +287,6 @@
                     badgeFormMode.className = "text-[10px] bg-emerald-950 text-emerald-400 px-2 py-0.5 rounded font-mono border border-emerald-500/30";
                 }
                 
-                // Agendamento seguro via requestAnimationFrame
                 requestAnimationFrame(() => {
                     ajustarObrigatoriedadeCamposPremium(true);
                     inicializarGraficosBI();
@@ -337,9 +335,11 @@
         function guardarPesca(e) {
             e.preventDefault(); 
 
+            // Correção estrutural na leitura dos IDs e mapeamento seguro dos campos
             const pIscoGeral = document.getElementById('iscos-gerais')?.value || "";
             const campoIscoPro = document.getElementById('isco-avancado')?.value || "";
             const campoPressao = document.getElementById('pressao')?.value || "";
+            const campoDescricaoPeixes = document.getElementById('iscos-e-peixes')?.value || "Grade";
 
             const novaPesca = {
                 id: Date.now(),
@@ -350,7 +350,7 @@
                 horaFim: document.getElementById('hora-fim')?.value || "--:--",
                 mare: document.getElementById('mare-tipo')?.value || "Enchente",
                 totalPeixes: parseInt(document.getElementById('total-capturas')?.value) || 0,
-                peixes: document.getElementById('iscos-e-peixes')?.value || "Grade",
+                peixes: campoDescricaoPeixes,
                 iscoGeral: pIscoGeral,
                 iscoPro: campoIscoPro || pIscoGeral.split(',')[0].trim() || "Casulo",
                 pressao: campoPressao ? parseInt(campoPressao) : null
@@ -361,10 +361,12 @@
             const form = document.getElementById('form-pesca');
             if (form) {
                 form.reset();
+                // Repõe a data de hoje por defeito após o reset
                 const campoData = document.getElementById('data');
                 if(campoData) campoData.value = new Date().toISOString().substring(0, 10);
             }
             
+            // Re-renderiza toda a interface com o novo array atualizado
             gerirInterfaceEstado();
         }
 
@@ -434,3 +436,87 @@
             if(dadosTratados.length === 0) {
                 corpo.innerHTML = `<tr><td colspan="9" class="px-4 py-8 text-center text-slate-500 italic">Nenhum registo disponível com o filtro atual.</td></tr>`;
                 return;
+            }
+
+            corpo.innerHTML = dadosTratados.map(p => `
+                <tr class="hover:bg-slate-800/40 border-b border-slate-800/50">
+                    <td class="px-4 py-3 font-mono text-slate-400 whitespace-nowrap">${p.data || '---'}</td>
+                    <td class="px-4 py-3 font-bold text-slate-200 whitespace-nowrap">${p.local || '---'}</td>
+                    <td class="px-4 py-3 text-slate-300 whitespace-nowrap">${p.lua || 'Nova'}</td>
+                    <td class="px-4 py-3 font-mono text-slate-400 whitespace-nowrap">${p.horaInicio || '--:--'}</td>
+                    <td class="px-4 py-3 font-mono text-slate-400 whitespace-nowrap">${p.horaFim || '--:--'}</td>
+                    <td class="px-4 py-3"><span class="bg-slate-800 px-2 py-0.5 rounded text-slate-400 whitespace-nowrap">${p.mare || 'Enchente'}</span></td>
+                    <td class="px-4 py-3 font-medium ${p.totalPeixes === 0 ? 'text-amber-500/70 italic' : 'text-emerald-400'} whitespace-nowrap">${p.peixes || 'Grade'}</td>
+                    <td class="px-4 py-3 text-slate-400 whitespace-nowrap">${p.iscoGeral || '---'}</td>
+                    <td class="px-4 py-3 text-right font-bold text-blue-400 pr-6 whitespace-nowrap">${p.totalPeixes ?? 0}</td>
+                </tr>
+            `).join('');
+        }
+
+        function destruirInstanciasGraficos() {
+            if (typeof Chart === 'undefined') return;
+            
+            try {
+                if(chartInstance1) { chartInstance1.destroy(); chartInstance1 = null; }
+                if(chartInstance2) { chartInstance2.destroy(); chartInstance2 = null; }
+                if(chartInstance3) { chartInstance3.destroy(); chartInstance3 = null; }
+            } catch(e) { console.warn("Limpando memória gráfica."); }
+        }
+
+        function inicializarGraficosBI() {
+            if (typeof Chart === 'undefined') return;
+            
+            destruirInstanciasGraficos();
+            
+            const c1 = document.getElementById('chartMare');
+            const c2 = document.getElementById('chartPressao');
+            const c3 = document.getElementById('chartIscos');
+            
+            if(!c1 || !c2 || !c3) return;
+
+            let dadosMare = { "Enchente": 0, "Vaza": 0, "Preamar": 0, "Baixa-mar": 0 };
+            pescas.forEach(p => { if(p.mare && dadosMare[p.mare] !== undefined) dadosMare[p.mare] += p.totalPeixes; });
+
+            let logsPressao = pescas.filter(p => p.pressao !== null).sort((a,b) => a.pressao - b.pressao);
+
+            let dadosIscosPro = {};
+            pescas.forEach(p => {
+                if(p.iscoPro && p.totalPeixes > 0) {
+                    const iscoChave = p.iscoPro.trim();
+                    dadosIscosPro[iscoChave] = (dadosIscosPro[iscoChave] || 0) + p.totalPeixes;
+                }
+            });
+
+            try {
+                chartInstance1 = new Chart(c1.getContext('2d'), {
+                    type: 'bar',
+                    data: { labels: Object.keys(dadosMare), datasets: [{ data: Object.values(dadosMare), backgroundColor: '#3b82f6', borderRadius: 4 }] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+                });
+            } catch(e) { console.error("Erro contido no Chart 1"); }
+
+            try {
+                chartInstance2 = new Chart(c2.getContext('2d'), {
+                    type: 'line',
+                    data: { 
+                        labels: logsPressao.length > 0 ? logsPressao.map(p => p.pressao + "hPa") : ["1012hPa", "1015hPa", "1018hPa"], 
+                        datasets: [{ data: logsPressao.length > 0 ? logsPressao.map(p => p.totalPeixes) : [5, 0, 3], borderColor: '#22d3ee', tension: 0.3, fill: false }] 
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+                });
+            } catch(e) { console.error("Erro contido no Chart 2"); }
+
+            try {
+                chartInstance3 = new Chart(c3.getContext('2d'), {
+                    type: 'doughnut',
+                    data: { 
+                        labels: Object.keys(dadosIscosPro).length > 0 ? Object.keys(dadosIscosPro) : ["Sem Dados Pro"], 
+                        datasets: [{ data: Object.keys(dadosIscosPro).length > 0 ? Object.values(dadosIscosPro) : [1], backgroundColor: ['#f59e0b', '#10b981', '#6366f1', '#ec4899'] }] 
+                    },
+                    options: { responsive: true, maintainAspectRatio: true, aspectRatio: 1, plugins: { legend: { display: false } } }
+                });
+            } catch (e) { console.error("Erro contido no Chart 3"); }
+        }
+    </script>
+</body>
+</html>

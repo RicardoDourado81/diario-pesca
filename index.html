@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Surfcasting Club Pro - V21.0 Dynamic Matrix Edition</title>
+    <title>Surfcasting Club Pro - V21.1 Granular Matrix Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -238,10 +238,15 @@
                                     <th onclick="ordenarPor('peixes')" class="px-4 py-3 cursor-pointer hover:bg-slate-700 hover:text-white select-none whitespace-nowrap">🐟 Descrição Peixes <span id="seta-peixes">↕</span></th>
                                     <th class="px-4 py-3 whitespace-nowrap">🐛 Iscos Utilizados</th>
                                     
-                                    <th class="coluna-premium px-4 py-3 whitespace-nowrap hidden text-cyan-400 font-bold bg-slate-800/40">🌡️ Clima</th>
-                                    <th class="coluna-premium px-4 py-3 whitespace-nowrap hidden text-cyan-400 font-bold bg-slate-800/40">🌊 Mar</th>
-                                    <th class="coluna-premium px-4 py-3 whitespace-nowrap hidden text-cyan-400 font-bold bg-slate-800/40">🎣 Técnica</th>
-                                    <th class="coluna-premium px-4 py-3 whitespace-nowrap hidden text-cyan-400 font-bold bg-slate-800/40">⚖️ Peso</th>
+                                    <th class="coluna-premium px-3 py-3 whitespace-nowrap hidden text-cyan-400 font-bold bg-slate-800/40">🌬️ Vento</th>
+                                    <th class="coluna-premium px-3 py-3 whitespace-nowrap hidden text-cyan-400 font-bold bg-slate-800/40">🌡️ Temp. Ar</th>
+                                    <th class="coluna-premium px-3 py-3 whitespace-nowrap hidden text-cyan-400 font-bold bg-slate-800/40">🎈 Pressão</th>
+                                    <th class="coluna-premium px-3 py-3 whitespace-nowrap hidden text-cyan-400 font-bold bg-slate-800/40">🌊 Temp. Água</th>
+                                    <th class="coluna-premium px-3 py-3 whitespace-nowrap hidden text-cyan-400 font-bold bg-slate-800/40">⏱️ Vaga (s)</th>
+                                    <th class="coluna-premium px-3 py-3 whitespace-nowrap hidden text-cyan-400 font-bold bg-slate-800/40">🧪 Estado Água</th>
+                                    <th class="coluna-premium px-3 py-3 whitespace-nowrap hidden text-cyan-400 font-bold bg-slate-800/40">🎯 Dist. (m)</th>
+                                    <th class="coluna-premium px-3 py-3 whitespace-nowrap hidden text-cyan-400 font-bold bg-slate-800/40">⚓ Chumbada</th>
+                                    <th class="coluna-premium px-3 py-3 whitespace-nowrap hidden text-cyan-400 font-bold bg-slate-800/40">⚖️ Peso Basket</th>
                                     
                                     <th class="px-4 py-3 text-right whitespace-nowrap pr-6">🔢 Qtd</th>
                                 </tr>
@@ -263,9 +268,9 @@
         let ordemCrescente = false; 
 
         let pescas = [
-            { id: 1, data: "2026-06-05", local: "Setúbal", lua: "Cheia", horaInicio: "21:00", horaFim: "02:30", mare: "Enchente", totalPeixes: 3, iscoGeral: "Casulo, Teagem", iscoPro: "Casulo", peixes: "3 Douradas", vento: "NW", tempAr: 19, pressao: 1018, tempAgua: 17, vaga: 8, montagem: "Urfe", peso: 1.8 },
-            { id: 2, data: "2026-06-03", local: "Nazaré", lua: "Crescente", horaInicio: "18:00", horaFim: "23:00", mare: "Vaza", totalPeixes: 5, iscoGeral: "Ganso, Coreano", iscoPro: "Ganso", peixes: "5 Sargos", vento: "Norte", tempAr: 16, pressao: 1012, tempAgua: 15, vaga: 11, montagem: "Long-line", peso: 2.1 },
-            { id: 3, data: "2026-05-28", local: "Tróia", lua: "Nova", horaInicio: "20:00", horaFim: "01:00", mare: "Enchente", totalPeixes: 0, iscoGeral: "Casulo", iscoPro: "Casulo", peixes: "Grade", vento: "Sul", tempAr: 21, pressao: 1015, tempAgua: 18, vaga: 6, montagem: "Paternoster", peso: 0 }
+            { id: 1, data: "2026-06-05", local: "Setúbal", lua: "Cheia", horaInicio: "21:00", horaFim: "02:30", mare: "Enchente", totalPeixes: 3, iscoGeral: "Casulo, Teagem", iscoPro: "Casulo", peixes: "3 Douradas", vento: "NW", tempAr: 19, pressao: 1018, tempAgua: 17, vaga: 8, aguaEstado: "Aberta", distancia: "120", chumbada: "Pirâmide 130g", montagem: "Urfe", peso: 1.8 },
+            { id: 2, data: "2026-06-03", local: "Nazaré", lua: "Crescente", horaInicio: "18:00", horaFim: "23:00", mare: "Vaza", totalPeixes: 5, iscoGeral: "Ganso, Coreano", iscoPro: "Ganso", peixes: "5 Sargos", vento: "Norte", tempAr: 16, pressao: 1012, tempAgua: 15, vaga: 11, aguaEstado: "Chocada", distancia: "95", chumbada: "Estrela 140g", montagem: "Long-line", peso: 2.1 },
+            { id: 3, data: "2026-05-28", local: "Tróia", lua: "Nova", horaInicio: "20:00", horaFim: "01:00", mare: "Enchente", totalPeixes: 0, iscoGeral: "Casulo", iscoPro: "Casulo", peixes: "Grade", vento: "Sul", tempAr: 21, pressao: 1015, tempAgua: 18, vaga: 6, aguaEstado: "Cristalina", distancia: "110", chumbada: "Torpede 120g", montagem: "Paternoster", peso: 0 }
         ];
 
         let chartInstance1 = null, chartInstance2 = null, chartInstance3 = null;
@@ -286,7 +291,7 @@
                 if(zonaBiPremium) zonaBiPremium.classList.remove('hidden');
                 if(formLockOverlay) formLockOverlay.classList.add('hidden');
                 if(formPremiumContent) formPremiumContent.classList.remove('hidden');
-                if(legendaTabelaModo) legendaTabelaModo.innerText = "⭐ MODO PREMIUM ATIVO: A visualizar métricas de inteligência e telemetria avançada.";
+                if(legendaTabelaModo) legendaTabelaModo.innerText = "⭐ MODO PREMIUM ATIVO: Relatório matricial detalhado com telemetria e parâmetros ambientais segregados.";
                 
                 colunasPremium.forEach(el => el.classList.remove('hidden'));
 
@@ -338,11 +343,14 @@
             const campoPressao = document.getElementById('pressao')?.value || "";
             const campoDescricaoPeixes = document.getElementById('iscos-e-peixes')?.value.trim() || (totalPeixesNum === 0 ? "Grade" : "Peixe");
 
-            // Parâmetros extraídos em segurança
+            // Parâmetros granulares Premium
             const vDir = document.getElementById('vento-dir')?.value || "Norte";
             const tAr = document.getElementById('temp-ar')?.value || "";
             const tAgua = document.getElementById('temp-agua')?.value || "";
             const pVaga = document.getElementById('periodo-vaga')?.value || "";
+            const eAgua = document.getElementById('agua-estado')?.value || "Aberta";
+            const dLan = document.getElementById('distancia-lan')?.value || "";
+            const cChumbada = document.getElementById('chumbada')?.value || "";
             const pMontagem = document.getElementById('montagem')?.value || "";
             const pPeso = document.getElementById('peso-total')?.value || "";
 
@@ -359,19 +367,22 @@
                 iscoGeral: pIscoGeral,
                 iscoPro: campoIscoPro || pIscoGeral.split(',')[0].trim(),
                 
-                // Métricas Avançadas salvas se estiverem preenchidas
+                // Segregação limpa na base de dados local
                 vento: vDir,
                 tempAr: tAr ? parseInt(tAr) : null,
                 pressao: campoPressao ? parseInt(campoPressao) : null,
                 tempAgua: tAgua ? parseInt(tAgua) : null,
                 vaga: pVaga ? parseInt(pVaga) : null,
+                aguaEstado: eAgua,
+                distancia: dLan || null,
+                chumbada: cChumbada || null,
                 montagem: pMontagem || null,
                 peso: pPeso ? parseFloat(pPeso) : null
             };
 
             pescas.unshift(novoRegisto);
             
-            // Limpeza cirúrgica sem quebrar DOM
+            // Limpeza segura sem colapsar as estruturas Tailwind
             const inputsParaLimpar = ['local', 'total-capturas', 'iscos-e-peixes', 'iscos-gerais', 'hora-inicio', 'hora-fim', 'temp-ar', 'pressao', 'temp-agua', 'periodo-vaga', 'distancia-lan', 'chumbada', 'montagem', 'peso-total', 'tamanho-anzol', 'isco-avancado'];
             inputsParaLimpar.forEach(id => {
                 const el = document.getElementById(id);
@@ -437,18 +448,12 @@
             });
 
             if(dadosTratados.length === 0) {
-                corpo.innerHTML = `<tr><td colspan="${utilizadorLogado ? 13 : 9}" class="px-4 py-8 text-center text-slate-500 italic">Nenhum registo disponível.</td></tr>`;
+                // Ajusta dinamicamente a junção das colunas para evitar bugs estéticos
+                corpo.innerHTML = `<tr><td colspan="${utilizadorLogado ? 18 : 9}" class="px-4 py-8 text-center text-slate-500 italic">Nenhum registo disponível.</td></tr>`;
                 return;
             }
 
-            corpo.innerHTML = dadosTratados.map(p => {
-                // Formatação segura de campos nulos em modo Pro
-                const txtClima = p.pressao ? `${p.vento || 'N'} / ${p.pressao}hPa` : (p.vento || '--');
-                const txtMar = p.vaga ? `${p.tempAgua || '--'}ºC / ${p.vaga}s` : '--';
-                const txtTecnica = p.montagem ? `${p.montagem}` : '--';
-                const txtPeso = p.peso ? `${p.peso} Kg` : '--';
-
-                return `
+            corpo.innerHTML = dadosTratados.map(p => `
                 <tr class="hover:bg-slate-800/40 border-b border-slate-800/50 text-slate-300">
                     <td class="px-4 py-3 font-mono text-slate-400 whitespace-nowrap">${p.data || ''}</td>
                     <td class="px-4 py-3 font-bold text-slate-200 whitespace-nowrap">${p.local || ''}</td>
@@ -459,15 +464,19 @@
                     <td class="px-4 py-3 font-medium ${p.totalPeixes === 0 ? 'text-amber-500/70 italic' : 'text-emerald-400'} whitespace-nowrap">${p.peixes || ''}</td>
                     <td class="px-4 py-3 text-slate-400 whitespace-nowrap">${p.iscoGeral || ''}</td>
                     
-                    <td class="coluna-premium px-4 py-3 font-mono text-xs text-slate-300 whitespace-nowrap ${utilizadorLogado ? '' : 'hidden'} bg-slate-900/40">${txtClima}</td>
-                    <td class="coluna-premium px-4 py-3 font-mono text-xs text-slate-300 whitespace-nowrap ${utilizadorLogado ? '' : 'hidden'} bg-slate-900/40">${txtMar}</td>
-                    <td class="coluna-premium px-4 py-3 text-xs text-slate-400 whitespace-nowrap ${utilizadorLogado ? '' : 'hidden'} bg-slate-900/40">${txtTecnica}</td>
-                    <td class="coluna-premium px-4 py-3 font-bold text-xs text-emerald-400 whitespace-nowrap ${utilizadorLogado ? '' : 'hidden'} bg-slate-900/40">${txtPeso}</td>
+                    <td class="coluna-premium px-3 py-3 font-mono text-[11px] text-slate-300 whitespace-nowrap ${utilizadorLogado ? '' : 'hidden'} bg-slate-900/30">${p.vento || '--'}</td>
+                    <td class="coluna-premium px-3 py-3 font-mono text-[11px] text-slate-300 whitespace-nowrap ${utilizadorLogado ? '' : 'hidden'} bg-slate-900/30">${p.tempAr ? p.tempAr+'º' : '--'}</td>
+                    <td class="coluna-premium px-3 py-3 font-mono text-[11px] text-slate-300 whitespace-nowrap ${utilizadorLogado ? '' : 'hidden'} bg-slate-900/30">${p.pressao ? p.pressao+' hPa' : '--'}</td>
+                    <td class="coluna-premium px-3 py-3 font-mono text-[11px] text-slate-300 whitespace-nowrap ${utilizadorLogado ? '' : 'hidden'} bg-slate-900/30">${p.tempAgua ? p.tempAgua+'º' : '--'}</td>
+                    <td class="coluna-premium px-3 py-3 font-mono text-[11px] text-slate-300 whitespace-nowrap ${utilizadorLogado ? '' : 'hidden'} bg-slate-900/30">${p.vaga ? p.vaga+'s' : '--'}</td>
+                    <td class="coluna-premium px-3 py-3 text-[11px] text-slate-400 whitespace-nowrap ${utilizadorLogado ? '' : 'hidden'} bg-slate-900/30">${p.aguaEstado || '--'}</td>
+                    <td class="coluna-premium px-3 py-3 font-mono text-[11px] text-slate-300 whitespace-nowrap ${utilizadorLogado ? '' : 'hidden'} bg-slate-900/30">${p.distancia ? p.distancia+'m' : '--'}</td>
+                    <td class="coluna-premium px-3 py-3 text-[11px] text-slate-400 whitespace-nowrap ${utilizadorLogado ? '' : 'hidden'} bg-slate-900/30">${p.chumbada || '--'}</td>
+                    <td class="coluna-premium px-3 py-3 font-bold text-[11px] text-emerald-400 whitespace-nowrap ${utilizadorLogado ? '' : 'hidden'} bg-slate-900/30">${p.peso ? p.peso+' Kg' : '--'}</td>
                     
                     <td class="px-4 py-3 text-right font-bold text-blue-400 pr-6 whitespace-nowrap">${p.totalPeixes ?? 0}</td>
                 </tr>
-                `;
-            }).join('');
+            `).join('');
         }
 
         function destruirInstanciasGraficos() {

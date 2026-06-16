@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Surfcasting Club Pro - V20.8 Production Ready</title>
+    <title>Surfcasting Club Pro - V20.9 Long-Term Stable</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -39,7 +39,7 @@
 
     <main class="max-w-7xl mx-auto px-4 py-8 space-y-8">
         
-        <section class="bg-slate-800 border border-slate-700 rounded-xl p-6 shadow-xl">
+        <section class="bg-slate-800 border border-slate-700 rounded-xl p-6 shadow-xl block">
             <div class="flex justify-between items-center mb-6 border-b border-slate-700 pb-3">
                 <h2 class="text-base font-bold text-slate-200 flex items-center gap-2">📈 O Meu Sumário de Pesca</h2>
                 <span class="text-[10px] text-emerald-400 bg-emerald-950/50 border border-emerald-500/30 px-2 py-0.5 rounded uppercase tracking-wider font-mono">Grátis</span>
@@ -90,57 +90,401 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div class="lg:col-span-3 space-y-8">
                 
-                <section class="bg-slate-800 border border-slate-700 rounded-xl p-6 shadow-xl space-y-6">
-                    <div class="flex justify-between items-center border-b border-slate-700 pb-3">
+                <section class="bg-slate-800 border border-slate-700 rounded-xl p-6 shadow-xl block">
+                    <div class="flex justify-between items-center border-b border-slate-700 pb-3 mb-6">
                         <h2 class="text-base font-bold flex items-center gap-2 text-blue-400"><span>📝</span> Novo Registo Técnico</h2>
                         <span id="badge-form-mode" class="text-[10px] bg-slate-700 text-slate-300 px-2 py-0.5 rounded font-mono">Modo Gratuito</span>
                     </div>
                     
                     <form id="form-pesca" onsubmit="event.preventDefault();" class="space-y-6 block">
                         
-                        <div id="bloco-campos-gratuitos" class="space-y-6 block">
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                <div>
-                                    <label class="block text-slate-500 text-[10px] uppercase mb-1 font-bold tracking-wider">📅 Data</label>
-                                    <input type="date" id="data" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 focus:ring-1 focus:ring-blue-500 outline-none">
-                                </div>
-                                <div>
-                                    <label class="block text-slate-500 text-[10px] uppercase mb-1 font-bold tracking-wider">📍 Local</label>
-                                    <input type="text" id="local" placeholder="Ex: Praia de Troia" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 focus:ring-1 focus:ring-blue-500 outline-none">
-                                </div>
-                                <div>
-                                    <label class="block text-slate-500 text-[10px] uppercase mb-1 font-bold tracking-wider">🌙 Lua</label>
-                                    <select id="lua" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 outline-none">
-                                        <option value="Nova">🌑 Lua Nova</option>
-                                        <option value="Crescente">🌓 Quarto Crescente</option>
-                                        <option value="Cheia">🌕 Lua Cheia</option>
-                                        <option value="Minguante">🌗 Quarto Minguante</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="block text-slate-500 text-[10px] uppercase mb-1 font-bold tracking-wider">⏱️ Hora Início</label>
-                                    <input type="time" id="hora-inicio" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 outline-none">
-                                </div>
-                                <div>
-                                    <label class="block text-slate-500 text-[10px] uppercase mb-1 font-bold tracking-wider">⏱️ Hora Fim</label>
-                                    <input type="time" id="hora-fim" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 outline-none">
-                                </div>
-                                <div>
-                                    <label class="block text-slate-500 text-[10px] uppercase mb-1 font-bold tracking-wider">🌊 Maré</label>
-                                    <select id="mare-tipo" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 outline-none">
-                                        <option value="Enchente">Enchente</option>
-                                        <option value="Vaza">Vaza</option>
-                                        <option value="Preamar">Preamar (Cheia)</option>
-                                        <option value="Baixa-mar">Baixa-mar (Vazia)</option>
-                                    </select>
-                                </div>
+                        <div id="bloco-campos-gratuitos" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-slate-500 text-[10px] uppercase mb-1 font-bold tracking-wider">📅 Data</label>
+                                <input type="date" id="data" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 focus:ring-1 focus:ring-blue-500 outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-slate-500 text-[10px] uppercase mb-1 font-bold tracking-wider">📍 Local</label>
+                                <input type="text" id="local" placeholder="Ex: Praia de Troia" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 focus:ring-1 focus:ring-blue-500 outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-slate-500 text-[10px] uppercase mb-1 font-bold tracking-wider">🌙 Lua</label>
+                                <select id="lua" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 outline-none">
+                                    <option value="Nova">🌑 Lua Nova</option>
+                                    <option value="Crescente">🌓 Quarto Crescente</option>
+                                    <option value="Cheia">🌕 Lua Cheia</option>
+                                    <option value="Minguante">🌗 Quarto Minguante</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-slate-500 text-[10px] uppercase mb-1 font-bold tracking-wider">⏱️ Hora Início</label>
+                                <input type="time" id="hora-inicio" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-slate-500 text-[10px] uppercase mb-1 font-bold tracking-wider">⏱️ Hora Fim</label>
+                                <input type="time" id="hora-fim" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-slate-500 text-[10px] uppercase mb-1 font-bold tracking-wider">🌊 Maré</label>
+                                <select id="mare-tipo" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 outline-none">
+                                    <option value="Enchente">Enchente</option>
+                                    <option value="Vaza">Vaza</option>
+                                    <option value="Preamar">Preamar (Cheia)</option>
+                                    <option value="Baixa-mar">Baixa-mar (Vazia)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div id="bloco-campos-gratuitos-2" class="grid grid-cols-1 md:grid-cols-4 gap-4 border-t border-slate-700/40 pt-4">
+                            <div class="md:col-span-1">
+                                <label class="block text-slate-500 text-[10px] uppercase mb-1 font-bold">N.º Peixes</label>
+                                <input type="number" id="total-capturas" min="0" placeholder="0 = Grade" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-100">
+                            </div>
+                            <div class="md:col-span-1">
+                                <label class="block text-slate-500 text-[10px] uppercase mb-1 font-bold">🐟 Espécies</label>
+                                <input type="text" id="iscos-e-peixes" placeholder="Ex: 2 Sargos, 1 Robalo" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-100">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-slate-500 text-[10px] uppercase mb-1 font-bold">🐛 Iscos Utilizados</label>
+                                <input type="text" id="iscos-gerais" placeholder="Ex: Casulo, Ganso" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-100">
+                            </div>
+                        </div>
+
+                        <div id="container-campos-premium" class="relative border border-blue-500/20 rounded-xl bg-slate-900/40 min-h-[60px] block">
+                            <div id="form-lock-overlay" class="absolute inset-0 z-10 bg-slate-950/85 flex flex-col items-center justify-center text-center p-4 rounded-xl">
+                                <p class="text-slate-400 text-xs">⭐ Parâmetros Avançados (Disponíveis apenas em Modo Premium)</p>
                             </div>
 
-                            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 border-t border-slate-700/40 pt-4">
-                                <div class="md:col-span-1">
-                                    <label class="block text-slate-500 text-[10px] uppercase mb-1 font-bold">N.º Peixes</label>
-                                    <input type="number" id="total-capturas" min="0" placeholder="0 = Grade" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-100">
+                            <div id="form-premium-content" class="p-5 space-y-6 hidden">
+                                <h3 class="text-blue-400 font-bold uppercase text-[11px] tracking-widest border-b border-slate-800 pb-2 flex items-center gap-2">
+                                    <span>📊</span> Parâmetros Avançados para Relatórios (Métricas PRO)
+                                </h3>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div class="space-y-3">
+                                        <p class="text-[10px] text-slate-500 font-bold uppercase">🌡️ Clima</p>
+                                        <div class="grid grid-cols-2 gap-2">
+                                            <div class="col-span-2">
+                                                <select id="vento-dir" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1.5 text-xs text-slate-100">
+                                                    <option value="Norte">Norte (N)</option><option value="Noroeste">NW</option>
+                                                    <option value="Oeste">Oeste (W)</option><option value="Este">Este (E)</option>
+                                                    <option value="Sul">Sul (S)</option>
+                                                </select>
+                                            </div>
+                                            <input type="number" id="temp-ar" placeholder="Ar (ºC)" class="bg-slate-800 border border-slate-700 rounded px-2 py-1.5 text-xs text-slate-100">
+                                            <input type="number" id="pressao" placeholder="Pressão (hPa)" class="bg-slate-800 border border-slate-700 rounded px-2 py-1.5 text-xs text-slate-100">
+                                        </div>
+                                    </div>
+                                    <div class="space-y-3">
+                                        <p class="text-[10px] text-slate-500 font-bold uppercase">🌊 Mar</p>
+                                        <div class="grid grid-cols-2 gap-2">
+                                            <input type="number" id="temp-agua" placeholder="Água (ºC)" class="bg-slate-800 border border-slate-700 rounded px-2 py-1.5 text-xs text-slate-100">
+                                            <input type="number" id="periodo-vaga" placeholder="Vaga (s)" class="bg-slate-800 border border-slate-700 rounded px-2 py-1.5 text-xs text-slate-100">
+                                            <select id="agua-estado" class="col-span-2 w-full bg-slate-800 border border-slate-700 rounded px-2 py-1.5 text-xs text-slate-100">
+                                                <option value="Aberta">Aberta/Normal</option>
+                                                <option value="Cristalina">Cristalina</option>
+                                                <option value="Chocada">Chocada/Barrenta</option>
+                                                <option value="Alada">Alada (Algas)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="space-y-3">
+                                        <p class="text-[10px] text-slate-500 font-bold uppercase">🎣 Técnica</p>
+                                        <div class="space-y-2">
+                                            <input type="text" id="distancia-lan" placeholder="Distância Lançamento (m)" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1.5 text-xs text-slate-100">
+                                            <input type="text" id="chumbada" placeholder="Tipo/Peso Chumbada" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1.5 text-xs text-slate-100">
+                                            <input type="text" id="montagem" placeholder="Montagem utilizada" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1.5 text-xs text-slate-100">
+                                        </div>
+                                    </div>
+                                    <div class="space-y-3">
+                                        <p class="text-[10px] text-slate-500 font-bold uppercase">🐟 Captura Avançada (BI)</p>
+                                        <div class="space-y-2">
+                                            <input type="number" id="peso-total" step="0.1" placeholder="Peso Cesta (Kg)" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1.5 text-xs text-slate-100">
+                                            <input type="text" id="tamanho-anzol" placeholder="Tamanho do anzol" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1.5 text-xs text-slate-100">
+                                            <input type="text" id="isco-avancado" placeholder="Isco Principal (Ex: Casulo)" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1.5 text-xs text-slate-100">
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="md:col-span-1">
-                                    <label class="block text-slate-500 text-[10px] uppercase mb-1 font-bold">🐟 Espécies</label>
-                                    <input type="text" id="iscos-e-
+                            </div>
+                        </div>
+                    </form>
+
+                    <div id="zona-botao-gravar" class="pt-4 block">
+                        <button type="button" onclick="processarSubmissaoManual()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-black py-4 rounded-lg text-xs uppercase tracking-widest cursor-pointer shadow-lg active:scale-[0.99] transition-all block">
+                            💾 Guardar Diário de Bordo
+                        </button>
+                    </div>
+                </section>
+
+                <section id="seccao-tabela-historico" class="bg-slate-800 border border-slate-700 rounded-xl p-6 shadow-xl block">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 border-b border-slate-700 pb-4">
+                        <h2 class="text-base font-bold flex items-center gap-2"><span>📊</span> Histórico Interativo de Capturas</h2>
+                        <div class="w-full sm:w-72">
+                            <input type="text" id="filtro-tabela" oninput="filtrarTabela()" placeholder="🔍 Filtrar por local, isco, peixe..." class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-slate-100 focus:ring-1 focus:ring-blue-500 outline-none">
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto rounded-lg border border-slate-700/60 bg-slate-900 block w-full">
+                        <table class="w-full text-left border-collapse text-xs table-auto">
+                            <thead>
+                                <tr class="bg-slate-800/80 text-slate-400 uppercase font-mono tracking-wider border-b border-slate-700 text-[10px]">
+                                    <th onclick="ordenarPor('data')" class="px-4 py-3 cursor-pointer hover:bg-slate-700 hover:text-white select-none whitespace-nowrap">📅 Data <span id="seta-data">↕</span></th>
+                                    <th onclick="ordenarPor('local')" class="px-4 py-3 cursor-pointer hover:bg-slate-700 hover:text-white select-none whitespace-nowrap">📍 Local <span id="seta-local">↕</span></th>
+                                    <th class="px-4 py-3 whitespace-nowrap">🌙 Lua</th>
+                                    <th class="px-4 py-3 whitespace-nowrap">⏱️ Início</th>
+                                    <th class="px-4 py-3 whitespace-nowrap">⏱️ Fim</th>
+                                    <th class="px-4 py-3 whitespace-nowrap">🌊 Maré</th>
+                                    <th onclick="ordenarPor('peixes')" class="px-4 py-3 cursor-pointer hover:bg-slate-700 hover:text-white select-none whitespace-nowrap">🐟 Descrição Peixes <span id="seta-peixes">↕</span></th>
+                                    <th class="px-4 py-3 whitespace-nowrap">🐛 Iscos Utilizados</th>
+                                    <th class="px-4 py-3 text-right whitespace-nowrap pr-6">🔢 Qtd</th>
+                                </tr>
+                            </thead>
+                            <tbody id="corpo-tabela" class="divide-y divide-slate-800 text-slate-300">
+                                </tbody>
+                        </table>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let utilizadorLogado = false;
+        let termoPesquisa = "";
+        let colunaOrdenacao = "data"; 
+        let ordemCrescente = false; 
+
+        let pescas = [
+            { id: 1, data: "2026-06-05", local: "Setúbal", lua: "Cheia", horaInicio: "21:00", horaFim: "02:30", mare: "Enchente", pressao: 1018, totalPeixes: 3, iscoGeral: "Casulo, Teagem", iscoPro: "Casulo", peixes: "3 Douradas" },
+            { id: 2, data: "2026-06-03", local: "Nazaré", lua: "Crescente", horaInicio: "18:00", horaFim: "23:00", mare: "Vaza", pressao: 1012, totalPeixes: 5, iscoGeral: "Ganso, Coreano", iscoPro: "Ganso", peixes: "5 Sargos" },
+            { id: 3, data: "2026-05-28", local: "Tróia", lua: "Nova", horaInicio: "20:00", horaFim: "01:00", mare: "Enchente", pressao: 1015, totalPeixes: 0, iscoGeral: "Casulo", iscoPro: "Casulo", peixes: "Grade" }
+        ];
+
+        let chartInstance1 = null, chartInstance2 = null, chartInstance3 = null;
+
+        function gerirInterfaceEstado() {
+            try { renderizarTabela(); } catch(e) { console.error("Erro Tabela:", e); }
+            try { atualizarContadoresGratuitos(); } catch(e) { console.error("Erro Contadores:", e); }
+
+            const zonaDeslogado = document.getElementById('zona-deslogado');
+            const zonaLogado = document.getElementById('zona-logado');
+            const zonaBiPremium = document.getElementById('zona-bi-premium');
+            const formLockOverlay = document.getElementById('form-lock-overlay');
+            const formPremiumContent = document.getElementById('form-premium-content');
+            const badgeFormMode = document.getElementById('badge-form-mode');
+
+            if (utilizadorLogado) {
+                if(zonaDeslogado) zonaDeslogado.classList.add('hidden');
+                if(zonaLogado) zonaLogado.classList.remove('hidden');
+                if(zonaBiPremium) zonaBiPremium.classList.remove('hidden');
+                if(formLockOverlay) formLockOverlay.classList.add('hidden');
+                if(formPremiumContent) formPremiumContent.classList.remove('hidden');
+                
+                if(badgeFormMode) {
+                    badgeFormMode.innerText = "Modo PREMIUM Ativo";
+                    badgeFormMode.className = "text-[10px] bg-emerald-950 text-emerald-400 px-2 py-0.5 rounded font-mono border border-emerald-500/30";
+                }
+                try { inicializarGraficosBI(); } catch(e) {}
+            } else {
+                if(zonaLogado) zonaLogado.classList.add('hidden');
+                if(zonaDeslogado) zonaDeslogado.classList.remove('hidden');
+                if(zonaBiPremium) zonaBiPremium.classList.add('hidden');
+                if(formPremiumContent) formPremiumContent.classList.add('hidden');
+                if(formLockOverlay) formLockOverlay.classList.remove('hidden');
+                
+                if(badgeFormMode) {
+                    badgeFormMode.innerText = "Modo Gratuito";
+                    badgeFormMode.className = "text-[10px] bg-slate-700 text-slate-300 px-2 py-0.5 rounded font-mono";
+                }
+                try { destruirInstanciasGraficos(); } catch(e) {}
+            }
+        }
+
+        function simularLogin() { utilizadorLogado = true; gerirInterfaceEstado(); }
+        function simularLogout() { utilizadorLogado = false; gerirInterfaceEstado(); }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const campoData = document.getElementById('data');
+            if(campoData) campoData.value = new Date().toISOString().substring(0, 10);
+            gerirInterfaceEstado(); 
+        });
+
+        function processarSubmissaoManual() {
+            const valLocal = document.getElementById('local')?.value.trim();
+            const valTotalInput = document.getElementById('total-capturas')?.value;
+
+            if(!valLocal) { alert("Por favor, introduza o Local."); return; }
+            if(valTotalInput === "") { alert("Por favor, introduza a quantidade de peixes (0 para Grade)."); return; }
+
+            const totalPeixesNum = parseInt(valTotalInput) || 0;
+            const pIscoGeral = document.getElementById('iscos-gerais')?.value.trim() || "Não especificado";
+            const campoIscoPro = document.getElementById('isco-avancado')?.value.trim() || "";
+            const campoPressao = document.getElementById('pressao')?.value || "";
+            const campoDescricaoPeixes = document.getElementById('iscos-e-peixes')?.value.trim() || (totalPeixesNum === 0 ? "Grade" : "Peixe");
+
+            const novoRegisto = {
+                id: Date.now(),
+                data: document.getElementById('data')?.value || new Date().toISOString().substring(0, 10),
+                local: valLocal,
+                lua: document.getElementById('lua')?.value || "Nova",
+                horaInicio: document.getElementById('hora-inicio')?.value || "--:--",
+                horaFim: document.getElementById('hora-fim')?.value || "--:--",
+                mare: document.getElementById('mare-tipo')?.value || "Enchente",
+                totalPeixes: totalPeixesNum,
+                peixes: campoDescricaoPeixes,
+                iscoGeral: pIscoGeral,
+                iscoPro: campoIscoPro || pIscoGeral.split(',')[0].trim(),
+                pressao: campoPressao ? parseInt(campoPressao) : null
+            };
+
+            pescas.unshift(novoRegisto);
+            
+            // LIMPEZA SEGURA SEM RESET() DESTRUTIVO DO TAILWIND:
+            const inputsParaLimpar = ['local', 'total-capturas', 'iscos-e-peixes', 'iscos-gerais', 'hora-inicio', 'hora-fim', 'temp-ar', 'pressao', 'temp-agua', 'periodo-vaga', 'distancia-lan', 'chumbada', 'montagem', 'peso-total', 'tamanho-anzol', 'isco-avancado'];
+            inputsParaLimpar.forEach(id => {
+                const el = document.getElementById(id);
+                if(el) el.value = "";
+            });
+
+            const campoData = document.getElementById('data');
+            if(campoData) campoData.value = new Date().toISOString().substring(0, 10);
+
+            gerirInterfaceEstado();
+        }
+
+        function atualizarContadoresGratuitos() {
+            const total = pescas.length;
+            let peixes = 0, grades = 0;
+            pescas.forEach(p => { peixes += p.totalPeixes; if(p.totalPeixes === 0) grades++; });
+            
+            if(document.getElementById('stat-total')) document.getElementById('stat-total').innerText = total;
+            if(document.getElementById('stat-peixes-total')) document.getElementById('stat-peixes-total').innerText = peixes;
+            if(document.getElementById('stat-media')) document.getElementById('stat-media').innerText = total > 0 ? (peixes/total).toFixed(1) : 0;
+            if(document.getElementById('stat-grade')) document.getElementById('stat-grade').innerText = total > 0 ? Math.round((grades/total)*100) + "%" : "0%";
+        }
+
+        function filtrarTabela() {
+            const inputFiltro = document.getElementById('filtro-tabela');
+            termoPesquisa = inputFiltro ? inputFiltro.value.toLowerCase().trim() : "";
+            renderizarTabela();
+        }
+
+        function ordenarPor(coluna) {
+            if (colunaOrdenacao === coluna) { ordemCrescente = !ordemCrescente; } 
+            else { colunaOrdenacao = coluna; ordemCrescente = true; }
+            renderizarTabela();
+        }
+
+        function renderizarTabela() {
+            const corpo = document.getElementById('corpo-tabela');
+            if (!corpo) return;
+
+            const sData = document.getElementById('seta-data');
+            const sLocal = document.getElementById('seta-local');
+            const sPeixes = document.getElementById('seta-peixes');
+            
+            if(sData) sData.innerText = colunaOrdenacao === 'data' ? (ordemCrescente ? '▲' : '▼') : '↕';
+            if(sLocal) sLocal.innerText = colunaOrdenacao === 'local' ? (ordemCrescente ? '▲' : '▼') : '↕';
+            if(sPeixes) sPeixes.innerText = colunaOrdenacao === 'peixes' ? (ordemCrescente ? '▲' : '▼') : '↕';
+
+            let dadosTratados = pescas.filter(p => {
+                if (!termoPesquisa) return true;
+                return (p.local || "").toLowerCase().includes(termoPesquisa) ||
+                       (p.peixes || "").toLowerCase().includes(termoPesquisa) ||
+                       (p.iscoGeral || "").toLowerCase().includes(termoPesquisa) ||
+                       (p.mare || "").toLowerCase().includes(termoPesquisa) ||
+                       (p.lua || "").toLowerCase().includes(termoPesquisa);
+            });
+
+            dadosTratados.sort((a, b) => {
+                let valA = a[colunaOrdenacao] || "";
+                let valB = b[colunaOrdenacao] || "";
+                if (valA < valB) return ordemCrescente ? -1 : 1;
+                if (valA > valB) return ordemCrescente ? 1 : -1;
+                return 0;
+            });
+
+            if(dadosTratados.length === 0) {
+                corpo.innerHTML = `<tr><td colspan="9" class="px-4 py-8 text-center text-slate-500 italic">Nenhum registo disponível.</td></tr>`;
+                return;
+            }
+
+            corpo.innerHTML = dadosTratados.map(p => `
+                <tr class="hover:bg-slate-800/40 border-b border-slate-800/50 text-slate-300">
+                    <td class="px-4 py-3 font-mono text-slate-400 whitespace-nowrap">${p.data || ''}</td>
+                    <td class="px-4 py-3 font-bold text-slate-200 whitespace-nowrap">${p.local || ''}</td>
+                    <td class="px-4 py-3 whitespace-nowrap">${p.lua || ''}</td>
+                    <td class="px-4 py-3 font-mono text-slate-400 whitespace-nowrap">${p.horaInicio || ''}</td>
+                    <td class="px-4 py-3 font-mono text-slate-400 whitespace-nowrap">${p.horaFim || ''}</td>
+                    <td class="px-4 py-3"><span class="bg-slate-800 px-2 py-0.5 rounded text-slate-400 whitespace-nowrap">${p.mare || ''}</span></td>
+                    <td class="px-4 py-3 font-medium ${p.totalPeixes === 0 ? 'text-amber-500/70 italic' : 'text-emerald-400'} whitespace-nowrap">${p.peixes || ''}</td>
+                    <td class="px-4 py-3 text-slate-400 whitespace-nowrap">${p.iscoGeral || ''}</td>
+                    <td class="px-4 py-3 text-right font-bold text-blue-400 pr-6 whitespace-nowrap">${p.totalPeixes ?? 0}</td>
+                </tr>
+            `).join('');
+        }
+
+        function destruirInstanciasGraficos() {
+            if (typeof Chart === 'undefined') return;
+            try {
+                if(chartInstance1) { chartInstance1.destroy(); chartInstance1 = null; }
+                if(chartInstance2) { chartInstance2.destroy(); chartInstance2 = null; }
+                if(chartInstance3) { chartInstance3.destroy(); chartInstance3 = null; }
+            } catch(e) {}
+        }
+
+        function inicializarGraficosBI() {
+            if (typeof Chart === 'undefined' || !utilizadorLogado) return;
+            destruirInstanciasGraficos();
+            
+            const c1 = document.getElementById('chartMare');
+            const c2 = document.getElementById('chartPressao');
+            const c3 = document.getElementById('chartIscos');
+            if(!c1 || !c2 || !c3) return;
+
+            let dadosMare = { "Enchente": 0, "Vaza": 0, "Preamar": 0, "Baixa-mar": 0 };
+            pescas.forEach(p => { if(p.mare && dadosMare[p.mare] !== undefined) dadosMare[p.mare] += p.totalPeixes; });
+
+            let logsPressao = pescas.filter(p => p.pressao !== null).sort((a,b) => a.pressao - b.pressao);
+
+            let dadosIscosPro = {};
+            pescas.forEach(p => {
+                if(p.iscoPro && p.totalPeixes > 0) {
+                    const iscoChave = p.iscoPro.trim();
+                    dadosIscosPro[iscoChave] = (dadosIscosPro[iscoChave] || 0) + p.totalPeixes;
+                }
+            });
+
+            try {
+                chartInstance1 = new Chart(c1.getContext('2d'), {
+                    type: 'bar',
+                    data: { labels: Object.keys(dadosMare), datasets: [{ data: Object.values(dadosMare), backgroundColor: '#3b82f6', borderRadius: 4 }] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+                });
+            } catch(e) {}
+
+            try {
+                chartInstance2 = new Chart(c2.getContext('2d'), {
+                    type: 'line',
+                    data: { 
+                        labels: logsPressao.length > 0 ? logsPressao.map(p => p.pressao + "hPa") : ["1012hPa", "1015hPa", "1018hPa"], 
+                        datasets: [{ data: logsPressao.length > 0 ? logsPressao.map(p => p.totalPeixes) : [5, 0, 3], borderColor: '#22d3ee', tension: 0.3, fill: false }] 
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+                });
+            } catch(e) {}
+
+            try {
+                chartInstance3 = new Chart(c3.getContext('2d'), {
+                    type: 'doughnut',
+                    data: { 
+                        labels: Object.keys(dadosIscosPro).length > 0 ? Object.keys(dadosIscosPro) : ["Sem Dados Pro"], 
+                        datasets: [{ data: Object.keys(dadosIscosPro).length > 0 ? Object.values(dadosIscosPro) : [1], backgroundColor: ['#f59e0b', '#10b981', '#6366f1', '#ec4899'] }] 
+                    },
+                    options: { responsive: true, maintainAspectRatio: true, aspectRatio: 1, plugins: { legend: { display: false } } }
+                });
+            } catch (e) {}
+        }
+    </script>
+</body>
+</html>

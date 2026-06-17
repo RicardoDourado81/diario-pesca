@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Surfcasting Club Pro - V21.6 Stable Production</title>
+    <title>Surfcasting Club Pro - V21.7 Bulletproof Production</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -24,7 +24,7 @@
                     </button>
                 </div>
                 
-                <div id="zona-logado" class="hidden flex items-center gap-3 bg-slate-950/60 pl-3 pr-2 py-1 rounded-lg border border-slate-700">
+                <div id="zona-logado" class="hidden flex items-center gap-3 bg-slate-955/60 pl-3 pr-2 py-1 rounded-lg border border-slate-700">
                     <div class="text-left">
                         <p class="text-xs font-bold text-slate-200">Pescador_Pro</p>
                         <p class="text-[10px] text-emerald-400 font-mono">BI & Métricas PRO Ativas</p>
@@ -299,7 +299,7 @@
                     badgeFormMode.innerText = "Modo PREMIUM Ativo";
                     badgeFormMode.className = "text-[10px] bg-emerald-950 text-emerald-400 px-2 py-0.5 rounded font-mono border border-emerald-500/30";
                 }
-                try { inicializarGraficosBI(); } catch(e) {}
+                inicializarGraficosBI();
             } else {
                 if(zonaLogado) zonaLogado.classList.add('hidden');
                 if(zonaDeslogado) zonaDeslogado.classList.remove('hidden');
@@ -314,19 +314,21 @@
                     badgeFormMode.innerText = "Modo Gratuito";
                     badgeFormMode.className = "text-[10px] bg-slate-700 text-slate-300 px-2 py-0.5 rounded font-mono";
                 }
-                try { destruirInstanciasGraficos(); } catch(e) {}
+                destruirInstanciasGraficos();
             }
 
-            try { renderizarTabela(); } catch(e) { console.error("Erro renderizarTabela:", e); }
-            try { atualizarContadoresGratuitos(); } catch(e) { console.error("Erro atualizarContadores:", e); }
+            try { renderizarTabela(); } catch(e) { console.error("Erro na Tabela:", e); }
+            try { atualizarContadoresGratuitos(); } catch(e) { console.error("Erro nos Contadores:", e); }
         }
 
         function simularLogin() { utilizadorLogado = true; gerirInterfaceEstado(); }
         function simularLogout() { utilizadorLogado = false; gerirInterfaceEstado(); }
 
         document.addEventListener('DOMContentLoaded', () => {
-            const campoData = document.getElementById('data');
-            if(campoData) campoData.value = new Date().toISOString().substring(0, 10);
+            try {
+                const campoData = document.getElementById('data');
+                if(campoData) campoData.value = new Date().toISOString().substring(0, 10);
+            } catch(e) {}
             gerirInterfaceEstado(); 
         });
 
@@ -480,11 +482,9 @@
 
         function destruirInstanciasGraficos() {
             if (typeof Chart === 'undefined') return;
-            try {
-                if(chartInstance1) { chartInstance1.destroy(); chartInstance1 = null; }
-                if(chartInstance2) { chartInstance2.destroy(); chartInstance2 = null; }
-                if(chartInstance3) { chartInstance3.destroy(); chartInstance3 = null; }
-            } catch(e) {}
+            try { if(chartInstance1) { chartInstance1.destroy(); chartInstance1 = null; } } catch(e){}
+            try { if(chartInstance2) { chartInstance2.destroy(); chartInstance2 = null; } } catch(e){}
+            try { if(chartInstance3) { chartInstance3.destroy(); chartInstance3 = null; } } catch(e){}
         }
 
         function inicializarGraficosBI() {
@@ -509,13 +509,14 @@
                 }
             });
 
+            // GESTÃO ISOLADA DE INSTANCIAÇÃO (EVITA QUEBRA EM CASCATA)
             try {
                 chartInstance1 = new Chart(c1.getContext('2d'), {
                     type: 'bar',
                     data: { labels: Object.keys(dadosMare), datasets: [{ data: Object.values(dadosMare), backgroundColor: '#3b82f6', borderRadius: 4 }] },
                     options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
                 });
-            } catch(e) {}
+            } catch(e) { console.error("Erro Chart 1:", e); }
 
             try {
                 chartInstance2 = new Chart(c2.getContext('2d'), {
@@ -526,7 +527,7 @@
                     },
                     options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
                 });
-            } catch(e) {}
+            } catch(e) { console.error("Erro Chart 2:", e); }
 
             try {
                 chartInstance3 = new Chart(c3.getContext('2d'), {
@@ -537,7 +538,7 @@
                     },
                     options: { responsive: true, maintainAspectRatio: true, aspectRatio: 1, plugins: { legend: { display: false } } }
                 });
-            } catch (e) {}
+            } catch (e) { console.error("Erro Chart 3:", e); }
         }
     </script>
 </body>

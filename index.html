@@ -3,26 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Surfcasting Club Pro - V29.0 Estabilidade Pura</title>
+    <title>Surfcasting Club Pro - Estabilidade Base</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="bg-slate-900 text-slate-100 min-h-screen font-sans text-sm">
 
-    <header class="bg-slate-800 border-b border-slate-700 sticky top-0 z-50 shadow-md">
-        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-            <div class="flex items-center gap-3">
-                <span class="text-2xl">⚓</span>
-                <h1 class="text-xl font-bold tracking-wide bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">Surfcasting Club Pro</h1>
-            </div>
-            
+    <header class="bg-slate-800 border-b border-slate-700 sticky top-0 z-50 shadow-md p-4">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <h1 class="text-xl font-bold text-blue-400">⚓ Surfcasting Club Pro</h1>
             <div id="auth-zone">
-                <button id="btn-ativar-premium" onclick="mudarModo(true)" type="button" class="bg-amber-500 hover:bg-amber-400 text-slate-950 px-4 py-2 rounded-lg font-bold text-xs transition cursor-pointer uppercase">
+                <button id="btn-premium" onclick="ativarModoPremium(true)" class="bg-amber-500 hover:bg-amber-400 text-slate-950 px-4 py-2 rounded-lg font-bold text-xs uppercase">
                     ⭐ Modo Premium
                 </button>
-                <div id="box-status-logado" class="hidden flex items-center gap-3 bg-slate-950/60 px-3 py-1.5 rounded-lg border border-slate-700">
-                    <span class="text-[10px] text-emerald-400 font-mono font-bold uppercase">Premium Ativo</span>
-                    <button onclick="mudarModo(false)" type="button" class="text-slate-400 hover:text-red-400 text-xs cursor-pointer">Sair 👋</button>
+                <div id="status-premium" class="hidden flex items-center gap-2 bg-slate-950 px-3 py-1.5 rounded-lg border border-slate-700">
+                    <span class="text-emerald-400 text-xs font-bold">PREMIUM</span>
+                    <button onclick="ativarModoPremium(false)" class="text-slate-400 hover:text-red-400 text-xs pl-2 border-l border-slate-700">Sair</button>
                 </div>
             </div>
         </div>
@@ -30,97 +25,264 @@
 
     <main class="max-w-7xl mx-auto px-4 py-6 space-y-6">
         
-        <div class="border-b border-slate-700 flex gap-2">
-            <button id="tab-btn-diario" onclick="alternarAbas('diario')" type="button" class="border-b-2 border-blue-500 text-blue-400 px-6 py-3 font-bold text-xs uppercase tracking-wider cursor-pointer">
-                📝 Diário de Bordo
-            </button>
-            <button id="tab-btn-bi" onclick="alternarAbas('bi')" type="button" class="text-slate-400 hover:text-slate-200 px-6 py-3 font-bold text-xs uppercase tracking-wider cursor-pointer">
-                📊 Análise BI
-            </button>
-        </div>
+        <section class="grid grid-cols-2 md:grid-cols-5 gap-4">
+            <div class="bg-slate-800 border border-slate-700 p-4 rounded-xl text-center">
+                <span class="text-[10px] text-slate-400 block uppercase font-bold mb-1">Saídas</span>
+                <span id="txt-saidas" class="text-2xl font-black text-blue-400">0</span>
+            </div>
+            <div class="bg-slate-800 border border-slate-700 p-4 rounded-xl text-center">
+                <span class="text-[10px] text-slate-400 block uppercase font-bold mb-1">Peixes</span>
+                <span id="txt-peixes" class="text-2xl font-black text-emerald-400">0</span>
+            </div>
+            <div class="bg-slate-800 border border-slate-700 p-4 rounded-xl text-center">
+                <span class="text-[10px] text-slate-400 block uppercase font-bold mb-1">Total Peso</span>
+                <span id="txt-peso" class="text-2xl font-black text-amber-400">0.0 <span class="text-xs font-normal text-slate-400">Kg</span></span>
+            </div>
+            <div class="bg-slate-800 border border-slate-700 p-4 rounded-xl text-center">
+                <span class="text-[10px] text-slate-400 block uppercase font-bold mb-1">Média</span>
+                <span id="txt-media" class="text-2xl font-black text-cyan-400">0</span>
+            </div>
+            <div class="bg-slate-800 border border-slate-700 p-4 rounded-xl text-center">
+                <span class="text-[10px] text-slate-400 block uppercase font-bold mb-1">Taxa Grade</span>
+                <span id="txt-grade" class="text-2xl font-black text-rose-500">0%</span>
+            </div>
+        </section>
 
-        <div id="view-diario" class="space-y-6">
+        <section id="seccao-formulario" class="bg-slate-800 border border-slate-700 rounded-xl p-6 shadow-xl">
+            <h2 class="text-sm font-bold text-blue-400 mb-6 border-b border-slate-700 pb-3 uppercase tracking-wider">📝 Novo Registo Técnico</h2>
             
-            <section class="grid grid-cols-2 md:grid-cols-5 gap-4">
-                <div class="bg-slate-800 border border-slate-700 p-4 rounded-xl text-center">
-                    <span class="text-[10px] text-slate-500 block uppercase font-bold mb-1">Saídas</span>
-                    <span id="txt-saidas" class="text-2xl font-black text-blue-400">0</span>
+            <form id="form-pesca" onsubmit="event.preventDefault();" class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-slate-300 text-[10px] uppercase mb-1 font-bold">📅 Data</label>
+                        <input type="date" id="inp-data" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-slate-300 text-[10px] uppercase mb-1 font-bold">📍 Localização</label>
+                        <input type="text" id="inp-local" placeholder="Ex: Setúbal" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-slate-300 text-[10px] uppercase mb-1 font-bold">🌙 Lua</label>
+                        <select id="inp-lua" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white outline-none">
+                            <option value="Cheia">🌕 Lua Cheia</option>
+                            <option value="Nova">🌑 Lua Nova</option>
+                            <option value="Crescente">🌓 Quarto Crescente</option>
+                            <option value="Minguante">🌗 Quarto Minguante</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="bg-slate-800 border border-slate-700 p-4 rounded-xl text-center">
-                    <span class="text-[10px] text-slate-500 block uppercase font-bold mb-1">Peixes</span>
-                    <span id="txt-peixes" class="text-2xl font-black text-emerald-400">0</span>
-                </div>
-                <div class="bg-slate-800 border border-slate-700 p-4 rounded-xl text-center">
-                    <span class="text-[10px] text-slate-500 block uppercase font-bold mb-1">Total Peso</span>
-                    <span id="txt-peso" class="text-2xl font-black text-amber-400">0.0 <span class="text-xs font-normal text-slate-400">Kg</span></span>
-                </div>
-                <div class="bg-slate-800 border border-slate-700 p-4 rounded-xl text-center">
-                    <span class="text-[10px] text-slate-500 block uppercase font-bold mb-1">Média</span>
-                    <span id="txt-media" class="text-2xl font-black text-cyan-400">0</span>
-                </div>
-                <div class="bg-slate-800 border border-slate-700 p-4 rounded-xl text-center">
-                    <span class="text-[10px] text-slate-500 block uppercase font-bold mb-1">Taxa Grade</span>
-                    <span id="txt-grade" class="text-2xl font-black text-rose-500">0%</span>
-                </div>
-            </section>
 
-            <section class="bg-slate-800 border border-slate-700 rounded-xl p-6 shadow-xl">
-                <h2 class="text-sm font-bold text-blue-400 mb-6 border-b border-slate-700 pb-3 uppercase tracking-wider">📝 Novo Registo Técnico</h2>
-                <form id="form-pesca" onsubmit="event.preventDefault();" class="space-y-6">
-                    
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-slate-300 text-[10px] uppercase mb-1 font-bold">⏱️ Hora Início</label>
+                        <input type="time" id="inp-inicio" value="20:00" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-slate-300 text-[10px] uppercase mb-1 font-bold">⏱️ Hora Fim</label>
+                        <input type="time" id="inp-fim" value="01:00" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-slate-300 text-[10px] uppercase mb-1 font-bold">🌊 Maré</label>
+                        <select id="inp-mare" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white outline-none">
+                            <option value="Enchente">Enchente</option>
+                            <option value="Vaza">Vaza</option>
+                            <option value="Preamar">Preamar (Cheia)</option>
+                            <option value="Baixa-mar">Baixa-mar (Vazia)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 border-t border-slate-700 pt-4">
+                    <div>
+                        <label class="block text-slate-300 text-[10px] uppercase mb-1 font-bold">🔢 N.º Peixes</label>
+                        <input type="number" id="inp-qtd" min="0" placeholder="0" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-slate-300 text-[10px] uppercase mb-1 font-bold">🐟 Espécies</label>
+                        <input type="text" id="inp-especies" placeholder="Ex: Douradas" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white outline-none">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-slate-300 text-[10px] uppercase mb-1 font-bold">🐛 Iscos</label>
+                        <input type="text" id="inp-iscos" placeholder="Ex: Casulo, Teagem" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white outline-none">
+                    </div>
+                </div>
+
+                <div class="p-4 rounded-xl border border-slate-700 bg-slate-900/60 space-y-4">
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">⚡ Módulo Avançado (Toques Exatos)</span>
+                        <button id="btn-add-toque" type="button" onclick="capturarHoraToque()" class="bg-slate-700 text-slate-500 font-bold px-3 py-1 rounded text-xs" disabled>🎣 Registar Toque</button>
+                    </div>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
-                            <label class="block text-slate-400 text-[10px] uppercase mb-1 font-bold">📅 Data</label>
-                            <input type="date" id="inp-data" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 outline-none focus:border-blue-500">
+                            <label class="block text-slate-500 text-[10px] uppercase mb-1">Timestamps</label>
+                            <input type="text" id="inp-toques" placeholder="Bloqueado" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs font-mono text-slate-500 outline-none" disabled>
                         </div>
                         <div>
-                            <label class="block text-slate-400 text-[10px] uppercase mb-1 font-bold">📍 Localização</label>
-                            <input type="text" id="inp-local" placeholder="Ex: Setúbal" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 outline-none focus:border-blue-500">
+                            <label class="block text-slate-500 text-[10px] uppercase mb-1">Pressão (hPa)</label>
+                            <input type="number" id="inp-pressao" placeholder="Bloqueado" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-500 outline-none" disabled>
                         </div>
                         <div>
-                            <label class="block text-slate-400 text-[10px] uppercase mb-1 font-bold">🌙 Lua</label>
-                            <select id="inp-lua" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 outline-none">
-                                <option value="Cheia">🌕 Lua Cheia</option>
-                                <option value="Nova">🌑 Lua Nova</option>
-                                <option value="Crescente">🌓 Quarto Crescente</option>
-                                <option value="Minguante">🌗 Quarto Minguante</option>
-                            </select>
+                            <label class="block text-slate-500 text-[10px] uppercase mb-1">Peso Total (Kg)</label>
+                            <input type="number" id="inp-peso" step="0.1" placeholder="Bloqueado" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-500 outline-none" disabled>
                         </div>
                     </div>
+                </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div>
-                            <label class="block text-slate-400 text-[10px] uppercase mb-1 font-bold">⏱️ Hora Início</label>
-                            <input type="time" id="inp-inicio" value="20:00" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-slate-400 text-[10px] uppercase mb-1 font-bold">⏱️ Hora Fim</label>
-                            <input type="time" id="inp-fim" value="01:00" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-slate-400 text-[10px] uppercase mb-1 font-bold">🌊 Estado da Maré</label>
-                            <select id="inp-mare" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 outline-none">
-                                <option value="Enchente">Enchente</option>
-                                <option value="Vaza">Vaza</option>
-                                <option value="Preamar">Preamar (Cheia)</option>
-                                <option value="Baixa-mar">Baixa-mar (Vazia)</option>
-                            </select>
-                        </div>
-                    </div>
+                <button type="button" onclick="adicionarNovoRegisto()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-black py-4 rounded-lg text-xs uppercase tracking-widest transition">
+                    💾 Guardar Diário de Bordo
+                </button>
+            </form>
+        </section>
 
-                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 border-t border-slate-700/60 pt-4">
-                        <div>
-                            <label class="block text-slate-400 text-[10px] uppercase mb-1 font-bold">🔢 N.º Peixes</label>
-                            <input type="number" id="inp-qtd" min="0" placeholder="0 = Grade" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-slate-400 text-[10px] uppercase mb-1 font-bold">🐟 Espécies</label>
-                            <input type="text" id="inp-especies" placeholder="Ex: 3 Douradas" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 outline-none">
-                        </div>
-                        <div class="md:col-span-2">
-                            <label class="block text-slate-400 text-[10px] uppercase mb-1 font-bold">🐛 Iscos Utilizados</label>
-                            <input type="text" id="inp-iscos" placeholder="Ex: Casulo, Ganso" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 outline-none">
-                        </div>
-                    </div>
+        <section class="bg-slate-800 border border-slate-700 rounded-xl p-6 shadow-xl">
+            <h2 class="text-sm font-bold text-slate-300 mb-4 uppercase tracking-wider">📋 Histórico Registado</h2>
+            <div class="overflow-x-auto rounded-lg border border-slate-700 bg-slate-900">
+                <table class="w-full text-left border-collapse text-xs">
+                    <thead>
+                        <tr class="bg-slate-800 text-slate-400 uppercase font-mono tracking-wider border-b border-slate-700 text-[10px]">
+                            <th class="px-4 py-3">📅 Data</th>
+                            <th class="px-4 py-3">📍 Local</th>
+                            <th class="px-4 py-3">🌙 Lua</th>
+                            <th class="px-4 py-3">🌊 Maré</th>
+                            <th class="px-4 py-3">⏱️ Toques Exatos</th>
+                            <th class="px-4 py-3 text-right pr-6">🔢 Peixes</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela-linhas" class="divide-y divide-slate-800 text-slate-300">
+                        </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
 
-                    <div class="p-4 rounded
+    <script>
+        letisPremiumAtivo = false;
+
+        let listagemPescas = [
+            { id: 1, data: "2026-06-20", local: "Setúbal", lua: "Cheia", inicio: "20:00", fim: "02:00", mare: "Enchente", qtd: 3, toques: ["21:15", "22:45", "23:30"], especies: "Douradas", peso: 1.8, pressao: 1018 },
+            { id: 2, data: "2026-06-18", local: "Nazaré", lua: "Nova", inicio: "21:00", fim: "03:00", mare: "Vaza", qtd: 1, toques: ["23:10"], especies: "Sargo", peso: 0.6, pressao: 1012 }
+        ];
+
+        window.onload = function() {
+            const campoData = document.getElementById('inp-data');
+            if(campoData) campoData.value = new Date().toISOString().substring(0, 10);
+            renderizarAplicacao();
+        };
+
+        function ativarModoPremium(ativar) {
+            letisPremiumAtivo = activar;
+            
+            const btnP = document.getElementById('btn-premium');
+            const statP = document.getElementById('status-premium');
+            const btnT = document.getElementById('btn-add-toque');
+            const inToques = document.getElementById('inp-toques');
+            const inPressao = document.getElementById('inp-pressao');
+            const inPeso = document.getElementById('inp-peso');
+
+            if(ativar) {
+                if(btnP) btnP.classList.add('hidden');
+                if(statP) statP.classList.remove('hidden');
+                if(btnT) { btnT.removeAttribute('disabled'); btnT.className = "bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-1 rounded text-xs cursor-pointer"; }
+                
+                [inToques, inPressao, inPeso].forEach(el => {
+                    if(el) {
+                        el.removeAttribute('disabled');
+                        el.placeholder = "Introduzir dados...";
+                        el.className = "w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white outline-none";
+                    }
+                });
+            } else {
+                if(statP) statP.classList.add('hidden');
+                if(btnP) btnP.classList.remove('hidden');
+                if(btnT) { btnT.setAttribute('disabled', 'true'); btnT.className = "bg-slate-700 text-slate-500 font-bold px-3 py-1 rounded text-xs"; }
+                
+                [inToques, inPressao, inPeso].forEach(el => {
+                    if(el) {
+                        el.setAttribute('disabled', 'true');
+                        el.value = "";
+                        el.placeholder = "Bloqueado";
+                        el.className = "w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs font-mono text-slate-500 outline-none";
+                    }
+                });
+            }
+            renderizarAplicacao();
+        }
+
+        function capturarHoraToque() {
+            const tInput = document.getElementById('inp-toques');
+            if(!tInput) return;
+            const d = new Date();
+            const h = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+            tInput.value = tInput.value.trim() === "" ? h : tInput.value.trim() + ", " + h;
+        }
+
+        function adicionarNovoRegisto() {
+            const loc = document.getElementById('inp-local')?.value.trim();
+            const qtdStr = document.getElementById('inp-qtd')?.value;
+
+            if(!loc || qtdStr === "") {
+                alert("Por favor, preencha o Local e a Quantidade de Peixes.");
+                return;
+            }
+
+            const rawToques = document.getElementById('inp-toques')?.value || "";
+            const arrToques = rawToques.split(',').map(s => s.trim()).filter(s => s !== "");
+
+            listagemPescas.unshift({
+                id: Date.now(),
+                data: document.getElementById('inp-data').value || new Date().toISOString().substring(0, 10),
+                local: loc,
+                lua: document.getElementById('inp-lua').value,
+                inicio: document.getElementById('inp-inicio').value,
+                fim: document.getElementById('inp-fim').value,
+                mare: document.getElementById('inp-mare').value,
+                qtd: parseInt(qtdStr) || 0,
+                toques: arrToques,
+                especies: document.getElementById('inp-especies').value.trim() || "Peixe",
+                iscos: document.getElementById('inp-iscos').value.trim() || "Vários",
+                pressao: parseInt(document.getElementById('inp-pressao')?.value) || null,
+                peso: parseFloat(document.getElementById('inp-peso')?.value) || null
+            });
+
+            // Limpar formulário de forma segura
+            ['inp-local', 'inp-qtd', 'inp-especies', 'inp-iscos', 'inp-toques', 'inp-pressao', 'inp-peso'].forEach(id => {
+                const elemento = document.getElementById(id);
+                if(elemento) elemento.value = "";
+            });
+
+            renderizarAplicacao();
+        }
+
+        function renderizarAplicacao() {
+            // 1. Atualizar Tabela
+            const tbody = document.getElementById('tabela-linhas');
+            if(tbody) {
+                tbody.innerHTML = listagemPescas.map(p => `
+                    <tr class="hover:bg-slate-800/40 border-b border-slate-800 text-slate-300">
+                        <td class="px-4 py-3 font-mono text-slate-400">${p.data}</td>
+                        <td class="px-4 py-3 font-bold text-slate-200">${p.local}</td>
+                        <td class="px-4 py-3">${p.lua}</td>
+                        <td class="px-4 py-3">${p.mare}</td>
+                        <td class="px-4 py-3 font-mono text-[11px] text-amber-400">${letisPremiumAtivo ? (p.toques.length > 0 ? p.toques.join(' | ') : '—') : '⭐⭐⭐'}</td>
+                        <td class="px-4 py-3 text-right font-bold text-blue-400 pr-6">${p.qtd}</td>
+                    </tr>
+                `).join('');
+            }
+
+            // 2. Atualizar Indicadores
+            let saídas = listagemPescas.length, peixes = 0, peso = 0, grades = 0;
+            listagemPescas.forEach(p => {
+                peixes += p.qtd;
+                if(p.qtd === 0) grades++;
+                if(p.peso) peso += p.peso;
+            });
+
+            if(document.getElementById('txt-saidas')) document.getElementById('txt-saidas').innerText = saídas;
+            if(document.getElementById('txt-peixes')) document.getElementById('txt-peixes').innerText = peixes;
+            if(document.getElementById('txt-peso')) document.getElementById('txt-peso').innerHTML = peso.toFixed(1) + ' <span class="text-xs text-slate-500">Kg</span>';
+            if(document.getElementById('txt-media')) document.getElementById('txt-media').innerText = saídas > 0 ? (peixes/saídas).toFixed(1) : 0;
+            if(document.getElementById('txt-grade')) document.getElementById('txt-grade').innerText = saídas > 0 ? Math.round((grades/saídas)*100) + "%" : "0%";
+        }
+    </script>
+</body>
+</html>

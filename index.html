@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Surfcasting Club Pro - V26.6 Core Engine</title>
+    <title>Surfcasting Club Pro - V26.7 Zero-Freeze</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -112,73 +112,4 @@
                             <input type="time" id="hora-fim" value="01:00" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 outline-none">
                         </div>
                         <div>
-                            <label class="block text-slate-500 text-[10px] uppercase mb-1 font-bold">🌊 Maré Predominante</label>
-                            <select id="mare-tipo" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 outline-none">
-                                <option value="Enchente">Enchente</option>
-                                <option value="Vaza">Vaza</option>
-                                <option value="Preamar">Preamar (Cheia)</option>
-                                <option value="Baixa-mar">Baixa-mar (Vazia)</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 border-t border-slate-700/40 pt-4">
-                        <div>
-                            <label class="block text-slate-500 text-[10px] uppercase mb-1 font-bold">N.º Peixes</label>
-                            <input type="number" id="total-capturas" min="0" placeholder="0 = Grade" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 outline-none">
-                        </div>
-                        <div class="md:col-span-1">
-                            <label class="block text-slate-500 text-[10px] uppercase mb-1 font-bold">🐟 Espécies</label>
-                            <input type="text" id="iscos-e-peixes" placeholder="Ex: 3 Douradas" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 outline-none">
-                        </div>
-                        <div class="md:col-span-2">
-                            <label class="block text-slate-500 text-[10px] uppercase mb-1 font-bold">🐛 Iscos Gerais</label>
-                            <input type="text" id="iscos-gerais" placeholder="Ex: Casulo, Teagem" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 outline-none">
-                        </div>
-                    </div>
-
-                    <div id="container-campos-premium" class="relative border border-blue-500/20 rounded-xl bg-slate-900/40 min-h-[60px]">
-                        <div id="form-lock-overlay" class="absolute inset-0 z-10 bg-slate-950/85 flex flex-col items-center justify-center text-center p-4 rounded-xl">
-                            <p class="text-slate-400 text-xs">⭐ Parâmetros Avançados e Registo de Toques (Disponíveis apenas em Modo Premium)</p>
-                        </div>
-
-                        <div id="form-premium-content" class="p-5 space-y-6 hidden">
-                            <div class="bg-slate-950/40 p-4 rounded-lg border border-slate-700/60 space-y-3">
-                                <div class="flex justify-between items-center">
-                                    <p class="text-[11px] font-bold text-amber-400 uppercase tracking-wider">⏱️ Timestamps: Hora Exata de Cada Captura</p>
-                                    <button type="button" onclick="capturarHoraAtual()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-1 rounded text-xs cursor-pointer">🎣 Registar Toque</button>
-                                </div>
-                                <input type="text" id="horas-toques" placeholder="Ex: 21:14, 23:02" class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-2 text-xs font-mono text-cyan-400 outline-none">
-                            </div>
-                            <div class="grid grid-cols-2 gap-4">
-                                <input type="number" id="pressao" placeholder="Pressão (hPa)" class="bg-slate-800 border border-slate-700 rounded px-3 py-2 text-xs text-slate-100 outline-none">
-                                <input type="number" id="peso-total" step="0.1" placeholder="Peso Total (Kg)" class="bg-slate-800 border border-slate-700 rounded px-3 py-2 text-xs text-slate-100 outline-none">
-                            </div>
-                        </div>
-                    </div>
-
-                    <button type="button" onclick="processarSubmissaoManual()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-black py-4 rounded-lg text-xs uppercase tracking-widest cursor-pointer shadow-lg transition-all">
-                        💾 Guardar Diário de Bordo
-                    </button>
-                </form>
-            </section>
-
-            <section class="bg-slate-800 border border-slate-700 rounded-xl p-6 shadow-xl">
-                <h2 class="text-base font-bold mb-4">📊 Histórico de Capturas</h2>
-                <div class="overflow-x-auto rounded-lg border border-slate-700 bg-slate-900 w-full">
-                    <table class="w-full text-left border-collapse text-xs table-auto">
-                        <thead id="cabecalho-tabela">
-                            </thead>
-                        <tbody id="corpo-tabela" class="divide-y divide-slate-800 text-slate-300">
-                            </tbody>
-                    </table>
-                </div>
-            </section>
-        </div>
-
-        <div id="conteudo-analytics" class="hidden space-y-6">
-            <div id="bi-lock-overlay" class="bg-slate-800 border border-slate-700 rounded-xl p-12 text-center shadow-xl">
-                <span class="text-5xl block mb-4">🔒</span>
-                <h3 class="text-xl font-bold text-slate-200">Módulo de BI Bloqueado</h3>
-                <p class="text-slate-400 text-xs max-w-sm mx-auto mt-2">Ative o Modo Premium no topo para ver os gráficos de fases da maré.</p>
-                <button
+                            <label class
